@@ -11,11 +11,22 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        //
+        $this->app->bind(
+            \App\Services\Auth\AuthService::class,
+            \App\Services\Auth\Impl\AuthServiceImpl::class,
+        );
+        $this->app->bind(
+            \App\Services\Product\CategoryService::class,
+            \App\Services\Product\Impl\CategoryServiceImpl::class,
+        );
+        $this->app->bind(
+            \App\Services\Product\ProductService::class,
+            \App\Services\Product\Impl\ProductServiceImpl::class,
+        );
     }
 
     public function boot()
     {
         Sanctum::usePersonalAccessTokenModel(OraclePersonalAccessToken::class);
-    }
+    }   
 }
