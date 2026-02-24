@@ -28,4 +28,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/getCategories', [CategoryController::class, 'getCategories']);
     Route::get('/getProducts/{family_id}', [ProductController::class, 'getProducts']);
+    Route::get('/getProductDetails/{product_id}', [ProductController::class, 'getProductDetails']);
 });

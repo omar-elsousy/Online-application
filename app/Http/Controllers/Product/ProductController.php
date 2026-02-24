@@ -19,4 +19,10 @@ class ProductController extends Controller
     {
         return $this->productService->getProductsByFamily($family_id);
     }
+
+    public function getProductDetails($product_id)
+    {
+        return $this->productService->getProductDetails($product_id);
+    }
+
 }
