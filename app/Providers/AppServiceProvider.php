@@ -23,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Services\Product\ProductService::class,
             \App\Services\Product\Impl\ProductServiceImpl::class,
         );
+        $this->app->bind(
+            \App\Services\Section\SectionService::class,
+            \App\Services\Section\Impl\SectionServiceImpl::class
+);
     }
 
     public function boot()

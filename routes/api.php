@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Product\CategoryController;
 use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\Section\SectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,4 +30,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getCategories', [CategoryController::class, 'getCategories']);
     Route::get('/getProducts/{family_id}', [ProductController::class, 'getProducts']);
     Route::get('/getProductDetails/{product_id}', [ProductController::class, 'getProductDetails']);
+    Route::get('/getSections', [SectionController::class, 'getSections']);
 });
