@@ -6,7 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Product\CategoryController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Section\SectionController;
-
+use App\Http\Controllers\Target\TargetController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,4 +31,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getProducts/{family_id}', [ProductController::class, 'getProducts']);
     Route::get('/getProductDetails/{product_id}', [ProductController::class, 'getProductDetails']);
     Route::get('/getSections', [SectionController::class, 'getSections']);
+    Route::get('/getTarget', [TargetController::class, 'getTarget']);
+
 });
