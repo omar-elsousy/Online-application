@@ -26,7 +26,7 @@ class TargetServiceImpl implements TargetService
 
         // السنة والشهر الحالي
         $year  = now()->year;
-        $month = 2; // Replace with the actual current month
+        $month = now()->month;
 
         // جيب التارجت
         $target = DB::connection('oracle_lmidc')
