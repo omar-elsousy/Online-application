@@ -26,14 +26,14 @@ class TargetServiceImpl implements TargetService
 
         // السنة والشهر الحالي
         $year  = now()->year;
-        $month = now()->month;
+        $month = 2; // Replace with the actual current month
 
         // جيب التارجت
         $target = DB::connection('oracle_lmidc')
                     ->table('target_retail_pos')
                     ->where('year', $year)
                     ->where('month', $month)
-                    ->whereRaw("ter_id || '_' || pos_id = ?", [$pos->pos_code])
+                    ->whereRaw("ter_id || '_' || pos_id = ?", [$pos->ter_id . '_' . $pos->pos_id])
                     ->select('achieved', 'target_sales')
                     ->first();
 
