@@ -30,7 +30,15 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Services\Target\TargetService::class,
             \App\Services\Target\Impl\TargetServiceImpl::class
+        );
+        $this->app->bind(
+            \App\Services\Cart\CartService::class,
+            \App\Services\Cart\Impl\CartServiceImpl::class
         );  
+        $this->app->bind(
+            \App\Services\Order\OrderService::class,
+            \App\Services\Order\Impl\OrderServiceImpl::class
+        );
     }
 
     public function boot()
