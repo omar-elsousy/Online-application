@@ -62,7 +62,7 @@ class CartServiceImpl implements CartService
             return response()->json([
                 'data' => [
                     'items'         => [],
-                    'product_count' => 0,
+                    'number_of_products' => 0,
                     'cart_total'    => 0,
                 ],
             ], 200);
@@ -115,6 +115,33 @@ class CartServiceImpl implements CartService
                 'number_of_products' => $items->count(),
                 'final_price'    => $cart_total,
             ],
+        ], 200);
+    }
+
+    public function removeFromCart(Request $request, $product_id)
+    {
+        $user_id = $request->user()->id;
+
+        $cartItem = DB::connection('oracle_sales')
+                        ->table('cart_online_app')
+                        ->where('user_id', $user_id)
+                        ->where('product_id', $product_id)
+                        ->first();
+
+        if (!$cartItem) {
+            return response()->json([
+                'message' => 'المنتج مش موجود في الكارت',
+            ], 404);
+        }
+
+        DB::connection('oracle_sales')
+            ->table('cart_online_app')
+            ->where('user_id', $user_id)
+            ->where('product_id', $product_id)
+            ->delete();
+
+        return response()->json([
+            'message' => 'تم مسح المنتج من الكارت بنجاح',
         ], 200);
     }
 }

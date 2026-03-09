@@ -189,4 +189,36 @@ class OrderServiceImpl implements OrderService
             'data' => $orders,
         ], 200);
     }
+
+    public function cancelOrder(Request $request, $order_id)
+    {
+        $user_id = $request->user()->id;
+
+        $order = DB::connection('oracle_sales')
+                    ->table('orders_online_app')
+                    ->where('id', $order_id)
+                    ->where('user_id', $user_id)
+                    ->first();
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'الأوردر مش موجود',
+            ], 404);
+        }
+
+        if ($order->status != 'pending') {
+            return response()->json([
+                'message' => 'مش ممكن تلغي الأوردر ده',
+            ], 400);
+        }
+
+        DB::connection('oracle_sales')
+            ->table('orders_online_app')
+            ->where('id', $order_id)
+            ->update(['status' => 'canceled']);
+
+        return response()->json([
+            'message' => 'تم إلغاء الأوردر بنجاح',
+        ], 200);
+    }
 }

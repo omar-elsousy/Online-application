@@ -9,4 +9,5 @@ interface OrderService
     public function placeOrder(Request $request);
     public function getOrderDetails(Request $request, $order_id);
     public function getUserOrdersHistory(Request $request);
-}
+    public function cancelOrder(Request $request, $order_id);
+    }

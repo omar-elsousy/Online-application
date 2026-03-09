@@ -24,4 +24,10 @@ class CartController extends Controller
     {
         return $this->cartService->getCart($request);
     }
+
+    public function removeFromCart(Request $request, $product_id)
+    {
+        return $this->cartService->removeFromCart($request, $product_id);
+    }
 }
+
