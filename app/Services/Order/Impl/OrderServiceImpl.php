@@ -80,4 +80,113 @@ class OrderServiceImpl implements OrderService
             'order_id' => $order_id,
         ], 201);
     }
+
+    public function getOrderDetails(Request $request, $order_id)
+    {
+        $user_id = $request->user()->id;
+
+        // جيب الأوردر
+        $order = DB::connection('oracle_sales')
+                    ->table('orders_online_app')
+                    ->where('id', $order_id)
+                    ->where('user_id', $user_id)
+                    ->first();
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'الأوردر مش موجود',
+            ], 404);
+        }
+
+        // جيب الـ items
+        $items = DB::connection('oracle_sales')
+                    ->table('order_items_online_app')
+                    ->where('order_id', $order_id)
+                    ->get()
+                    ->map(function($item) {
+                        $product = DB::connection('oracle_lmidc')
+                                        ->table('to_sfa_products_android')
+                                        ->where('product_id', $item->product_id)
+                                        ->first();
+
+                        $image = DB::connection('oracle_sales')
+                                    ->table('online_app_images')
+                                    ->where('type', 'product')
+                                    ->where('ref_id', $item->product_id)
+                                    ->value('image_path');
+
+                        return [
+                            'image'                => $image ? asset('storage/' . $image) : null,
+                            'product_id'           => $item->product_id,
+                            'name'                 => $product->product_ename,
+                            'quantity'             => $item->quantity,
+                            'unit_price'           => $item->unit_price,
+                            'unit_tax'             => $item->unit_tax,
+                            'unit_price_after_tax' => $item->unit_price_after_tax,
+                            'total_price'          => $item->total_price,
+                        ];
+                    });
+
+        return response()->json([
+            'data' => [
+                'order_id'    => $order->id,
+                'status'      => $order->status,
+                'final_price' => $order->total_price,
+                'created_at'  => $order->created_at,
+                'items'       => $items,
+            ],
+        ], 200);
+    }
+
+    public function getUserOrdersHistory(Request $request)
+    {
+        $user_id = $request->user()->id;
+
+        $orders = DB::connection('oracle_sales')
+                    ->table('orders_online_app')
+                    ->where('user_id', $user_id)
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+                    ->map(function($order) {
+                        $items = DB::connection('oracle_sales')
+                                    ->table('order_items_online_app')
+                                    ->where('order_id', $order->id)
+                                    ->get()
+                                    ->map(function($item) {
+                                        $product = DB::connection('oracle_lmidc')
+                                                        ->table('to_sfa_products_android')
+                                                        ->where('product_id', $item->product_id)
+                                                        ->first();
+
+                                        $image = DB::connection('oracle_sales')
+                                                    ->table('online_app_images')
+                                                    ->where('type', 'product')
+                                                    ->where('ref_id', $item->product_id)
+                                                    ->value('image_path');
+
+                                        return [
+                                            'image'                => $image ? asset('storage/' . $image) : null,
+                                            'product_id'           => $item->product_id,
+                                            'name'                 => $product->product_ename,
+                                            'quantity'             => $item->quantity,
+                                            'unit_price'           => $item->unit_price,
+                                            'unit_tax'             => $item->unit_tax,
+                                            'unit_price_after_tax' => $item->unit_price_after_tax,
+                                            'total_price'          => $item->total_price,
+                                        ];
+                                    });
+
+                        return [
+                            'order_id'    => $order->id,
+                            'status'      => $order->status,
+                            'total_price' => $order->total_price,
+                            'created_at'  => $order->created_at,
+                            'items'       => $items,
+                        ];
+                    });
+
+        return response()->json([
+            'data' => $orders,
+        ], 200);
+    }
 }
