@@ -57,7 +57,7 @@ class OrderServiceImpl implements OrderService
                         ->insertGetId([
                             'user_id'     => $user_id,
                             'total_price' => round($total_price, 1),
-                            'status'      => 'pending',
+                            'status'      => 'placed',
                             'created_at'  => now(),
                         ]);
 
@@ -118,7 +118,7 @@ class OrderServiceImpl implements OrderService
                         return [
                             'image'                => $image ? asset('storage/' . $image) : null,
                             'product_id'           => $item->product_id,
-                            'name'                 => $product->product_ename,
+                            'name' => $product ? $product->product_ename : 'منتج محذوف',
                             'quantity'             => $item->quantity,
                             'unit_price'           => $item->unit_price,
                             'unit_tax'             => $item->unit_tax,
@@ -167,7 +167,7 @@ class OrderServiceImpl implements OrderService
                                         return [
                                             'image'                => $image ? asset('storage/' . $image) : null,
                                             'product_id'           => $item->product_id,
-                                            'name'                 => $product->product_ename,
+                                            'name' => $product ? $product->product_ename : 'منتج محذوف',
                                             'quantity'             => $item->quantity,
                                             'unit_price'           => $item->unit_price,
                                             'unit_tax'             => $item->unit_tax,
@@ -206,7 +206,7 @@ class OrderServiceImpl implements OrderService
             ], 404);
         }
 
-        if ($order->status != 'pending') {
+        if ($order->status != 'placed') {
             return response()->json([
                 'message' => 'مش ممكن تلغي الأوردر ده',
             ], 400);

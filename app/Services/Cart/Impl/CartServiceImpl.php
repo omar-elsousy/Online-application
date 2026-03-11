@@ -98,7 +98,7 @@ class CartServiceImpl implements CartService
             return [
                 'image'                => $image ? asset('storage/' . $image) : null,
                 'product_id'           => $cartItem->product_id,
-                'name'                 => $product->product_ename,
+                'name' => $product ? $product->product_ename : 'منتج محذوف',
                 'quantity'             => $cartItem->quantity,
                 'unit_price'           => $unit_price,
                 'unit_tax'             => $unit_tax,

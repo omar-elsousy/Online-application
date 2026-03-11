@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Services\OTP\SMSService;
 
 class AuthServiceImpl implements AuthService
 {
@@ -75,4 +76,129 @@ class AuthServiceImpl implements AuthService
             'message' => 'تم تسجيل الخروج بنجاح',
         ]);
     }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password'      => 'required',
+            'new_password'          => 'required|min:6|confirmed',
+        ]);
+
+        $user = DB::connection('oracle_sales')
+                    ->table('online_app_users')
+                    ->where('mobile', $request->user()->mobile)
+                    ->first();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'message' => 'الباسورد الحالي غلط',
+            ], 401);
+        }
+
+        DB::connection('oracle_sales')
+            ->table('online_app_users')
+            ->where('mobile', $request->user()->mobile)
+            ->update([
+                'password'   => Hash::make($request->new_password),
+                'updated_at' => now(),
+            ]);
+
+        return response()->json([
+            'message' => 'تم تغيير الباسورد بنجاح',
+        ], 200);
+    }
+
+    public function sendOtp(Request $request)
+    {
+        $request->validate([
+            'mobile' => 'required',
+        ]);
+
+        $user = DB::connection('oracle_sales')
+                    ->table('online_app_users')
+                    ->where('mobile', $request->mobile)
+                    ->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'رقم الموبايل مش موجود',
+            ], 404);
+        }
+
+        // عمل OTP عشوائي
+        $otp = rand(100000, 999999);
+
+        // خزن الـ OTP في الداتا بيز
+        DB::connection('oracle_sales')
+            ->table('online_app_password_reset_otp')
+            ->where('mobile', $request->mobile)
+            ->delete();
+
+        DB::connection('oracle_sales')
+            ->table('online_app_password_reset_otp')
+            ->insert([
+                'mobile'     => $request->mobile,
+                'otp'        => $otp,
+                'expires_at' => now()->addMinutes(10),
+                'created_at' => now(),
+            ]);
+
+        // بعت الـ OTP على الموبايل
+        try {
+            $smsService = new SMSService();
+            $smsService->sendSMS($request->mobile, "كود التحقق الخاص بك هو: $otp");
+        } catch (\Exception $e) {
+
+        }
+
+        return response()->json([
+            'message' => 'تم إرسال الكود على موبايلك',
+            'otp'     => $otp, // دي بس للعرض في الـ response، في الحقيقة مش هنبعتها
+        ], 200);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'otp'                   => 'required',
+            'new_password'          => 'required|min:6|confirmed',
+        ]);
+
+        $otpRecord = DB::connection('oracle_sales')
+                        ->table('online_app_password_reset_otp')
+                        ->where('otp', $request->otp)
+                        ->first();
+
+        if (!$otpRecord) {
+            return response()->json([
+                'message' => 'الكود غلط',
+            ], 401);
+        }
+
+        if (now()->gt($otpRecord->expires_at)) {
+            return response()->json([
+                'message' => 'الكود انتهت صلاحيته',
+            ], 401);
+        }
+
+        // غير الباسورد
+        DB::connection('oracle_sales')
+            ->table('online_app_users')
+            ->where('mobile', $otpRecord->mobile)
+            ->update([
+                'password'   => Hash::make($request->new_password),
+                'updated_at' => now(),
+            ]);
+
+        // امسح الـ OTP
+        DB::connection('oracle_sales')
+            ->table('online_app_password_reset_otp')
+            ->where('otp', $request->otp)
+            ->delete();
+
+        return response()->json([
+            'message' => 'تم تغيير الباسورد بنجاح',
+        ], 200);
+    }
+
 }

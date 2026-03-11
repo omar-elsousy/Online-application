@@ -29,5 +29,20 @@ class AuthController extends Controller
     {
         return $this->authService->logout($request);
     }
+
+    public function changePassword(Request $request)
+    {
+        return $this->authService->changePassword($request);
+    }
+
+    public function sendOtp(Request $request)
+    {
+        return $this->authService->sendOtp($request);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        return $this->authService->resetPassword($request);
+    }
 }
 

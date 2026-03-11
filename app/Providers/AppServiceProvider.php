@@ -39,6 +39,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Services\Order\OrderService::class,
             \App\Services\Order\Impl\OrderServiceImpl::class
         );
+        $this->app->bind(
+            \App\Services\Favourite\FavouriteService::class,
+            \App\Services\Favourite\Impl\FavouriteServiceImpl::class
+        );
     }
 
     public function boot()

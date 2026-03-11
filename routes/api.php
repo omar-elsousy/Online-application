@@ -9,6 +9,7 @@ use App\Http\Controllers\Section\SectionController;
 use App\Http\Controllers\Target\TargetController;
 use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Order\OrderController;
+use App\Http\Controllers\Favourite\FavouriteController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,6 +27,8 @@ use App\Http\Controllers\Order\OrderController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
+Route::post('/sendOtp', [AuthController::class, 'sendOtp']);
+Route::post('/resetPassword', [AuthController::class, 'resetPassword']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -41,4 +44,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getUserOrdersHistory', [OrderController::class, 'getUserOrdersHistory']);
     Route::post('/cancelOrder/{order_id}', [OrderController::class, 'cancelOrder']);
     Route::delete('/removeFromCart/{product_id}', [CartController::class, 'removeFromCart']);
+    Route::post('/addToFavourites/{product_id}', [FavouriteController::class, 'addToFavourites']);
+    Route::get('/getFavourites', [FavouriteController::class, 'getFavourites']);
+    Route::post('/changePassword', [AuthController::class, 'changePassword']);
+    
+
 });
