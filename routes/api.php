@@ -10,6 +10,7 @@ use App\Http\Controllers\Target\TargetController;
 use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Favourite\FavouriteController;
+use App\Http\Controllers\Notification\NotificationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -47,6 +48,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/addToFavourites/{product_id}', [FavouriteController::class, 'addToFavourites']);
     Route::get('/getFavourites', [FavouriteController::class, 'getFavourites']);
     Route::post('/changePassword', [AuthController::class, 'changePassword']);
-    
-
+    Route::post('/saveDeviceToken', [NotificationController::class, 'saveDeviceToken']);
 });

@@ -43,6 +43,26 @@ class AppServiceProvider extends ServiceProvider
             \App\Services\Favourite\FavouriteService::class,
             \App\Services\Favourite\Impl\FavouriteServiceImpl::class
         );
+        $this->app->bind(
+            \App\Services\Notification\NotificationService::class,
+            \App\Services\Notification\Impl\NotificationServiceImpl::class
+        );
+        $this->app->bind(
+            \App\Services\Dashboard\Auth\AuthService::class,
+            \App\Services\Dashboard\Auth\Impl\AuthServiceImpl::class
+        );
+        $this->app->bind(
+            \App\Services\Dashboard\Home\HomeService::class,
+            \App\Services\Dashboard\Home\Impl\HomeServiceImpl::class
+        );
+        $this->app->bind(
+            \App\Services\Dashboard\Order\OrderService::class,
+            \App\Services\Dashboard\Order\Impl\OrderServiceImpl::class
+        );
+        $this->app->bind(
+            \App\Services\Dashboard\User\UserService::class,
+            \App\Services\Dashboard\User\Impl\UserServiceImpl::class
+        );
     }
 
     public function boot()

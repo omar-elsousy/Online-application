@@ -58,6 +58,12 @@ class AuthServiceImpl implements AuthService
             ], 401);
         }
 
+        if ($user->is_blocked) {
+            return response()->json([
+                'message' => 'تم حظر حسابك',
+            ], 403);
+        }
+
         $userModel = User::find($user->id);
         $token = $userModel->createToken('api-token')->plainTextToken;
 

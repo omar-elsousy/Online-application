@@ -12,7 +12,6 @@ class OrderServiceImpl implements OrderService
     {
         $user_id = $request->user()->id;
 
-        // جيب الكارت بتاع اليوزر
         $cartItems = DB::connection('oracle_sales')
                         ->table('cart_online_app')
                         ->where('user_id', $user_id)
@@ -24,7 +23,6 @@ class OrderServiceImpl implements OrderService
             ], 400);
         }
 
-        // احسب التوتال
         $total_price = 0;
         $items = [];
 
@@ -51,7 +49,6 @@ class OrderServiceImpl implements OrderService
             ];
         }
 
-        // عمل الأوردر
         $order_id = DB::connection('oracle_sales')
                         ->table('orders_online_app')
                         ->insertGetId([
@@ -61,7 +58,6 @@ class OrderServiceImpl implements OrderService
                             'created_at'  => now(),
                         ]);
 
-        // ضيف الـ items
         foreach ($items as $item) {
             $item['order_id'] = $order_id;
             DB::connection('oracle_sales')
@@ -69,11 +65,18 @@ class OrderServiceImpl implements OrderService
                 ->insert($item);
         }
 
-        // امسح الكارت
         DB::connection('oracle_sales')
             ->table('cart_online_app')
             ->where('user_id', $user_id)
             ->delete();
+
+        // بعت notification
+        $notificationService = app(\App\Services\Notification\NotificationService::class);
+        $notificationService->sendNotification(
+            $user_id,
+            'تم تأكيد طلبك ✅',
+            'تم استلام طلبك بنجاح وجاري تجهيزه'
+        );
 
         return response()->json([
             'message'  => 'تم طلب الأوردر بنجاح',
@@ -85,7 +88,6 @@ class OrderServiceImpl implements OrderService
     {
         $user_id = $request->user()->id;
 
-        // جيب الأوردر
         $order = DB::connection('oracle_sales')
                     ->table('orders_online_app')
                     ->where('id', $order_id)
@@ -98,7 +100,6 @@ class OrderServiceImpl implements OrderService
             ], 404);
         }
 
-        // جيب الـ items
         $items = DB::connection('oracle_sales')
                     ->table('order_items_online_app')
                     ->where('order_id', $order_id)
@@ -118,7 +119,7 @@ class OrderServiceImpl implements OrderService
                         return [
                             'image'                => $image ? asset('storage/' . $image) : null,
                             'product_id'           => $item->product_id,
-                            'name' => $product ? $product->product_ename : 'منتج محذوف',
+                            'name'                 => $product ? $product->product_ename : 'منتج محذوف',
                             'quantity'             => $item->quantity,
                             'unit_price'           => $item->unit_price,
                             'unit_tax'             => $item->unit_tax,
@@ -167,7 +168,7 @@ class OrderServiceImpl implements OrderService
                                         return [
                                             'image'                => $image ? asset('storage/' . $image) : null,
                                             'product_id'           => $item->product_id,
-                                            'name' => $product ? $product->product_ename : 'منتج محذوف',
+                                            'name'                 => $product ? $product->product_ename : 'منتج محذوف',
                                             'quantity'             => $item->quantity,
                                             'unit_price'           => $item->unit_price,
                                             'unit_tax'             => $item->unit_tax,
@@ -216,6 +217,14 @@ class OrderServiceImpl implements OrderService
             ->table('orders_online_app')
             ->where('id', $order_id)
             ->update(['status' => 'canceled']);
+
+        // بعت notification
+        $notificationService = app(\App\Services\Notification\NotificationService::class);
+        $notificationService->sendNotification(
+            $user_id,
+            'تم إلغاء طلبك ❌',
+            'تم إلغاء طلبك بنجاح'
+        );
 
         return response()->json([
             'message' => 'تم إلغاء الأوردر بنجاح',
