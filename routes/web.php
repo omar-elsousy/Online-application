@@ -5,6 +5,7 @@ use App\Http\Controllers\Dashboard\AuthController;
 use App\Http\Controllers\Dashboard\HomeController;
 use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\Dashboard\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +33,10 @@ Route::prefix('dashboard')->group(function () {
         Route::post('/blockUser/{user_id}', [UserController::class, 'blockUser']);
         Route::post('/unblockUser/{user_id}', [UserController::class, 'unblockUser']);
         });
+        
+    Route::middleware('super.admin')->group(function () {
+    Route::get('/admins', [AdminController::class, 'admins']);
+    Route::post('/addAdmin', [AdminController::class, 'addAdmin']);
+    Route::post('/deleteAdmin/{admin_id}', [AdminController::class, 'deleteAdmin']);
+});  
 });

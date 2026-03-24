@@ -63,6 +63,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Services\Dashboard\User\UserService::class,
             \App\Services\Dashboard\User\Impl\UserServiceImpl::class
         );
+        $this->app->bind(
+            \App\Services\Dashboard\Admin\AdminService::class,
+            \App\Services\Dashboard\Admin\Impl\AdminServiceImpl::class
+        );
     }
 
     public function boot()

@@ -29,7 +29,10 @@ class AuthServiceImpl implements AuthService
             ]);
         }
 
-        session(['admin' => $admin]);
+        session([
+            'admin'    => $admin,
+            'admin_id' => $admin->id,
+        ]);
 
         return redirect('/dashboard/home');
     }

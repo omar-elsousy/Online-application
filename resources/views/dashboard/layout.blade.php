@@ -73,9 +73,11 @@
         <a href="/dashboard/users" class="{{ request()->is('dashboard/users*') ? 'active' : '' }}">
             <i class="fas fa-users me-2"></i> العملاء
         </a>
+        @if(session('admin')->role == 'super_admin')
         <a href="/dashboard/admins" class="{{ request()->is('dashboard/admins*') ? 'active' : '' }}">
-            <i class="fas fa-user-shield me-2"></i> الادمنز
+            <i class="fas fa-user-shield me-2"></i> الأدمنز
         </a>
+        @endif
     </div>
 
     <!-- Main Content -->

@@ -12,6 +12,6 @@ class Admin extends Authenticatable
     protected $connection = 'oracle_sales';
     protected $table = 'online_app_admins';
 
-    protected $fillable = ['mobile', 'password'];
+    protected $fillable = ['mobile', 'password', 'role'];
     protected $hidden = ['password'];
 }
