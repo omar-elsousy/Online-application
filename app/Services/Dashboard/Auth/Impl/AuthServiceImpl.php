@@ -32,6 +32,7 @@ class AuthServiceImpl implements AuthService
         session([
             'admin'    => $admin,
             'admin_id' => $admin->id,
+            'admin_role' => $admin->role,
         ]);
 
         return redirect('/dashboard/home');

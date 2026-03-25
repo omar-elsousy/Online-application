@@ -6,6 +6,7 @@ use App\Http\Controllers\Dashboard\HomeController;
 use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\AdminController;
+use App\Http\Controllers\Dashboard\ImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,8 +33,13 @@ Route::prefix('dashboard')->group(function () {
         Route::post('/deleteUser/{user_id}', [UserController::class, 'deleteUser']);
         Route::post('/blockUser/{user_id}', [UserController::class, 'blockUser']);
         Route::post('/unblockUser/{user_id}', [UserController::class, 'unblockUser']);
+        Route::get('/images', [ImageController::class, 'images']);
+        Route::post('/uploadProductImage', [ImageController::class, 'uploadProductImage']);
+        Route::post('/uploadCategoryImage', [ImageController::class, 'uploadCategoryImage']);
+        Route::post('/uploadSectionImage', [ImageController::class, 'uploadSectionImage']);
+        Route::post('/deleteImage/{image_id}', [ImageController::class, 'deleteImage']);
         });
-        
+
     Route::middleware('super.admin')->group(function () {
     Route::get('/admins', [AdminController::class, 'admins']);
     Route::post('/addAdmin', [AdminController::class, 'addAdmin']);

@@ -67,6 +67,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Services\Dashboard\Admin\AdminService::class,
             \App\Services\Dashboard\Admin\Impl\AdminServiceImpl::class
         );
+        $this->app->bind(
+            \App\Services\Dashboard\Image\ImageService::class,
+            \App\Services\Dashboard\Image\Impl\ImageServiceImpl::class
+        );
     }
 
     public function boot()

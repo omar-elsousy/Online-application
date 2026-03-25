@@ -9,7 +9,7 @@ class SuperAdminAuth
 {
     public function handle(Request $request, Closure $next)
     {
-        if (session('admin')->role != 'super_admin') {
+        if (session('admin_role') != 'super_admin') {
             return redirect('/dashboard/home');
         }
 
