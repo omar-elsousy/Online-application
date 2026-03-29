@@ -7,7 +7,8 @@ use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\AdminController;
 use App\Http\Controllers\Dashboard\ImageController;
-
+use App\Http\Controllers\Dashboard\SectionController;
+use App\Http\Controllers\Dashboard\NotificationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,6 +39,12 @@ Route::prefix('dashboard')->group(function () {
         Route::post('/uploadCategoryImage', [ImageController::class, 'uploadCategoryImage']);
         Route::post('/uploadSectionImage', [ImageController::class, 'uploadSectionImage']);
         Route::post('/deleteImage/{image_id}', [ImageController::class, 'deleteImage']);
+        Route::get('/sections', [SectionController::class, 'sections']);
+        Route::post('/toggleSection/{image_id}', [SectionController::class, 'toggleSection']);
+        Route::post('/updateSortOrder/{image_id}', [SectionController::class, 'updateSortOrder']);
+        Route::get('/notifications', [NotificationController::class, 'notifications']);
+        Route::post('/sendToAll', [NotificationController::class, 'sendToAll']);
+        Route::post('/sendToUser', [NotificationController::class, 'sendToUser']);
         });
 
     Route::middleware('super.admin')->group(function () {
