@@ -1,5 +1,7 @@
-<?php 
+<?php
+
 namespace App\Services\Auth\Impl;
+
 use App\Services\Auth\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,9 +20,9 @@ class AuthServiceImpl implements AuthService
 
         // نتحقق يدوياً إن الموبايل مش موجود
         $exists = DB::connection('oracle_sales')
-                    ->table('online_app_users')
-                    ->where('mobile', $request->mobile)
-                    ->first();
+            ->table('online_app_users')
+            ->where('mobile', $request->mobile)
+            ->first();
 
         if ($exists) {
             return response()->json([
@@ -48,9 +50,9 @@ class AuthServiceImpl implements AuthService
         ]);
 
         $user = DB::connection('oracle_sales')
-                    ->table('online_app_users')
-                    ->where('mobile', $request->mobile)
-                    ->first();
+            ->table('online_app_users')
+            ->where('mobile', $request->mobile)
+            ->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
@@ -64,6 +66,28 @@ class AuthServiceImpl implements AuthService
             ], 403);
         }
 
+        // جيب الـ warehouse_id
+        $pos = DB::connection('oracle_lmidc')
+            ->table('pos')
+            ->where('mobile', $request->mobile)
+            ->first();
+
+        if ($pos) {
+            $user_code = $pos->ter_id . '_' . $pos->pos_id;
+
+            $ws = DB::connection('oracle_sales')
+                ->table('v_to_online_users_ws')
+                ->where('user_code', $user_code)
+                ->first();
+
+            if ($ws) {
+                DB::connection('oracle_sales')
+                    ->table('online_app_users')
+                    ->where('id', $user->id)
+                    ->update(['warehouse_id' => $ws->warehouse_id]);
+            }
+        }
+
         $userModel = User::find($user->id);
         $token = $userModel->createToken('api-token')->plainTextToken;
 
@@ -71,7 +95,6 @@ class AuthServiceImpl implements AuthService
             'message' => 'تم تسجيل الدخول بنجاح',
             'token'   => $token,
         ]);
-
     }
 
     public function logout(Request $request)
@@ -91,9 +114,9 @@ class AuthServiceImpl implements AuthService
         ]);
 
         $user = DB::connection('oracle_sales')
-                    ->table('online_app_users')
-                    ->where('mobile', $request->user()->mobile)
-                    ->first();
+            ->table('online_app_users')
+            ->where('mobile', $request->user()->mobile)
+            ->first();
 
         if (!Hash::check($request->current_password, $user->password)) {
             return response()->json([
@@ -121,9 +144,9 @@ class AuthServiceImpl implements AuthService
         ]);
 
         $user = DB::connection('oracle_sales')
-                    ->table('online_app_users')
-                    ->where('mobile', $request->mobile)
-                    ->first();
+            ->table('online_app_users')
+            ->where('mobile', $request->mobile)
+            ->first();
 
         if (!$user) {
             return response()->json([
@@ -154,7 +177,6 @@ class AuthServiceImpl implements AuthService
             $smsService = new SMSService();
             $smsService->sendSMS($request->mobile, "كود التحقق الخاص بك هو: $otp");
         } catch (\Exception $e) {
-
         }
 
         return response()->json([
@@ -171,9 +193,9 @@ class AuthServiceImpl implements AuthService
         ]);
 
         $otpRecord = DB::connection('oracle_sales')
-                        ->table('online_app_password_reset_otp')
-                        ->where('otp', $request->otp)
-                        ->first();
+            ->table('online_app_password_reset_otp')
+            ->where('otp', $request->otp)
+            ->first();
 
         if (!$otpRecord) {
             return response()->json([
@@ -206,5 +228,4 @@ class AuthServiceImpl implements AuthService
             'message' => 'تم تغيير الباسورد بنجاح',
         ], 200);
     }
-
 }

@@ -67,8 +67,14 @@
         <a href="/dashboard/sections" class="{{ request()->is('dashboard/sections*') ? 'active' : '' }}">
             <i class="fas fa-th-large me-2"></i> الاعلانات
         </a>
+        <a href="/dashboard/visibility" class="{{ request()->is('dashboard/visibility*') ? 'active' : '' }}">
+            <i class="fas fa-eye me-2"></i> إظهار / إخفاء
+        </a>
         <a href="/dashboard/notifications" class="{{ request()->is('dashboard/notifications*') ? 'active' : '' }}">
             <i class="fas fa-bell me-2"></i> الإشعارات
+        </a>
+        <a href="/dashboard/stock" class="{{ request()->is('dashboard/stock*') ? 'active' : '' }}">
+            <i class="fas fa-boxes me-2"></i> الستوك
         </a>
         <a href="/dashboard/users" class="{{ request()->is('dashboard/users*') ? 'active' : '' }}">
             <i class="fas fa-users me-2"></i> العملاء

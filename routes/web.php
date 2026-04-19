@@ -9,6 +9,9 @@ use App\Http\Controllers\Dashboard\AdminController;
 use App\Http\Controllers\Dashboard\ImageController;
 use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\NotificationController;
+use App\Http\Controllers\Dashboard\VisibilityController;
+use App\Http\Controllers\Dashboard\StockController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,6 +48,13 @@ Route::prefix('dashboard')->group(function () {
         Route::get('/notifications', [NotificationController::class, 'notifications']);
         Route::post('/sendToAll', [NotificationController::class, 'sendToAll']);
         Route::post('/sendToUser', [NotificationController::class, 'sendToUser']);
+        Route::get('/visibility', [VisibilityController::class, 'visibility']);
+        Route::post('/hideProduct/{product_id}', [VisibilityController::class, 'hideProduct']);
+        Route::post('/showProduct/{product_id}', [VisibilityController::class, 'showProduct']);
+        Route::post('/hideCategory/{family_id}', [VisibilityController::class, 'hideCategory']);
+        Route::post('/showCategory/{family_id}', [VisibilityController::class, 'showCategory']);
+        Route::get('/stock', [StockController::class, 'stock']);
+        Route::post('/toggleStock/{product_id}/{warehouse_id}', [StockController::class, 'toggleStock']);
         });
 
     Route::middleware('super.admin')->group(function () {

@@ -79,6 +79,14 @@ class AppServiceProvider extends ServiceProvider
             \App\Services\Dashboard\Notification\NotificationService::class,
             \App\Services\Dashboard\Notification\Impl\NotificationServiceImpl::class
         );
+        $this->app->bind(
+            \App\Services\Dashboard\Visibility\VisibilityService::class,
+            \App\Services\Dashboard\Visibility\Impl\VisibilityServiceImpl::class
+        );
+        $this->app->bind(
+            \App\Services\Dashboard\Stock\StockService::class,
+            \App\Services\Dashboard\Stock\Impl\StockServiceImpl::class
+        );
     }
 
     public function boot()

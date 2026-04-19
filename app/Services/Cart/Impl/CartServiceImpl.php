@@ -11,20 +11,36 @@ class CartServiceImpl implements CartService
     public function addToCart(Request $request, $product_id)
     {
         $request->validate([
-            'quantity'   => 'required|numeric|min:1',
+            'quantity' => 'required|numeric|min:1',
         ]);
 
         $user_id = $request->user()->id;
 
-        // شوف المنتج موجود في الكارت ولا لا
+        // تحقق من الستوك
+        $user = DB::connection('oracle_sales')
+            ->table('online_app_users')
+            ->where('id', $user_id)
+            ->first();
+
+        $stock = DB::connection('oracle_sales')
+            ->table('online_app_stock')
+            ->where('product_id', $product_id)
+            ->where('warehouse_id', $user->warehouse_id)
+            ->first();
+
+        if ($stock && !$stock->in_stock) {
+            return response()->json([
+                'message' => 'المنتج ده out of stock',
+            ], 400);
+        }
+
         $cartItem = DB::connection('oracle_sales')
-                        ->table('cart_online_app')
-                        ->where('user_id', $user_id)
-                        ->where('product_id', $product_id)
-                        ->first();
+            ->table('cart_online_app')
+            ->where('user_id', $user_id)
+            ->where('product_id', $product_id)
+            ->first();
 
         if ($cartItem) {
-            // لو موجود زود الـ quantity
             DB::connection('oracle_sales')
                 ->table('cart_online_app')
                 ->where('user_id', $user_id)
@@ -33,7 +49,6 @@ class CartServiceImpl implements CartService
                     'quantity' => $cartItem->quantity + $request->quantity,
                 ]);
         } else {
-            // لو مش موجود ضيفه
             DB::connection('oracle_sales')
                 ->table('cart_online_app')
                 ->insert([
@@ -54,9 +69,9 @@ class CartServiceImpl implements CartService
         $user_id = $request->user()->id;
 
         $cartItems = DB::connection('oracle_sales')
-                        ->table('cart_online_app')
-                        ->where('user_id', $user_id)
-                        ->get();
+            ->table('cart_online_app')
+            ->where('user_id', $user_id)
+            ->get();
 
         if ($cartItems->isEmpty()) {
             return response()->json([
@@ -68,26 +83,26 @@ class CartServiceImpl implements CartService
             ], 200);
         }
 
-        $items = $cartItems->map(function($cartItem) {
+        $items = $cartItems->map(function ($cartItem) {
             // جيب بيانات المنتج
             $product = DB::connection('oracle_lmidc')
-                            ->table('to_sfa_products_android')
-                            ->where('product_id', $cartItem->product_id)
-                            ->first();
+                ->table('to_sfa_products_android')
+                ->where('product_id', $cartItem->product_id)
+                ->first();
 
             // جيب السعر والضريبة
             $price = DB::connection('oracle_lmidc')
-                        ->table('product_price_list')
-                        ->where('product_id', $cartItem->product_id)
-                        ->where('line_price_id', 1)
-                        ->first();
+                ->table('product_price_list')
+                ->where('product_id', $cartItem->product_id)
+                ->where('line_price_id', 1)
+                ->first();
 
             // جيب الصورة
             $image = DB::connection('oracle_sales')
-                        ->table('online_app_images')
-                        ->where('type', 'product')
-                        ->where('ref_id', $cartItem->product_id)
-                        ->value('image_path');
+                ->table('online_app_images')
+                ->where('type', 'product')
+                ->where('ref_id', $cartItem->product_id)
+                ->value('image_path');
 
             // احسب السعر
             $unit_price          = round($price->pricelist_carton, 1);
@@ -123,10 +138,10 @@ class CartServiceImpl implements CartService
         $user_id = $request->user()->id;
 
         $cartItem = DB::connection('oracle_sales')
-                        ->table('cart_online_app')
-                        ->where('user_id', $user_id)
-                        ->where('product_id', $product_id)
-                        ->first();
+            ->table('cart_online_app')
+            ->where('user_id', $user_id)
+            ->where('product_id', $product_id)
+            ->first();
 
         if (!$cartItem) {
             return response()->json([

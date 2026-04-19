@@ -13,9 +13,9 @@ class OrderServiceImpl implements OrderService
         $user_id = $request->user()->id;
 
         $cartItems = DB::connection('oracle_sales')
-                        ->table('cart_online_app')
-                        ->where('user_id', $user_id)
-                        ->get();
+            ->table('cart_online_app')
+            ->where('user_id', $user_id)
+            ->get();
 
         if ($cartItems->isEmpty()) {
             return response()->json([
@@ -23,15 +23,41 @@ class OrderServiceImpl implements OrderService
             ], 400);
         }
 
+        // جيب الـ warehouse_id بتاع اليوزر
+        $user = DB::connection('oracle_sales')
+            ->table('online_app_users')
+            ->where('id', $user_id)
+            ->first();
+
+        // تحقق من الستوك لكل منتج في الكارت
+        foreach ($cartItems as $cartItem) {
+            $stock = DB::connection('oracle_sales')
+                ->table('online_app_stock')
+                ->where('product_id', $cartItem->product_id)
+                ->where('warehouse_id', $user->warehouse_id)
+                ->first();
+
+            if ($stock && !$stock->in_stock) {
+                $product = DB::connection('oracle_lmidc')
+                    ->table('to_sfa_products_android')
+                    ->where('product_id', $cartItem->product_id)
+                    ->first();
+
+                return response()->json([
+                    'message' => 'المنتج ' . ($product ? $product->product_ename : $cartItem->product_id) . ' out of stock',
+                ], 400);
+            }
+        }
+
         $total_price = 0;
         $items = [];
 
         foreach ($cartItems as $cartItem) {
             $price = DB::connection('oracle_lmidc')
-                        ->table('product_price_list')
-                        ->where('product_id', $cartItem->product_id)
-                        ->where('line_price_id', 1)
-                        ->first();
+                ->table('product_price_list')
+                ->where('product_id', $cartItem->product_id)
+                ->where('line_price_id', 1)
+                ->first();
 
             $unit_price           = round($price->pricelist_carton, 1);
             $unit_tax             = round(($price->pricelist_carton * ($price->tax_percentage / 100)) + $price->product_tax, 1);
@@ -50,13 +76,13 @@ class OrderServiceImpl implements OrderService
         }
 
         $order_id = DB::connection('oracle_sales')
-                        ->table('orders_online_app')
-                        ->insertGetId([
-                            'user_id'     => $user_id,
-                            'total_price' => round($total_price, 1),
-                            'status'      => 'placed',
-                            'created_at'  => now(),
-                        ]);
+            ->table('orders_online_app')
+            ->insertGetId([
+                'user_id'     => $user_id,
+                'total_price' => round($total_price, 1),
+                'status'      => 'placed',
+                'created_at'  => now(),
+            ]);
 
         foreach ($items as $item) {
             $item['order_id'] = $order_id;
@@ -89,10 +115,10 @@ class OrderServiceImpl implements OrderService
         $user_id = $request->user()->id;
 
         $order = DB::connection('oracle_sales')
-                    ->table('orders_online_app')
-                    ->where('id', $order_id)
-                    ->where('user_id', $user_id)
-                    ->first();
+            ->table('orders_online_app')
+            ->where('id', $order_id)
+            ->where('user_id', $user_id)
+            ->first();
 
         if (!$order) {
             return response()->json([
@@ -101,32 +127,32 @@ class OrderServiceImpl implements OrderService
         }
 
         $items = DB::connection('oracle_sales')
-                    ->table('order_items_online_app')
-                    ->where('order_id', $order_id)
-                    ->get()
-                    ->map(function($item) {
-                        $product = DB::connection('oracle_lmidc')
-                                        ->table('to_sfa_products_android')
-                                        ->where('product_id', $item->product_id)
-                                        ->first();
+            ->table('order_items_online_app')
+            ->where('order_id', $order_id)
+            ->get()
+            ->map(function ($item) {
+                $product = DB::connection('oracle_lmidc')
+                    ->table('to_sfa_products_android')
+                    ->where('product_id', $item->product_id)
+                    ->first();
 
-                        $image = DB::connection('oracle_sales')
-                                    ->table('online_app_images')
-                                    ->where('type', 'product')
-                                    ->where('ref_id', $item->product_id)
-                                    ->value('image_path');
+                $image = DB::connection('oracle_sales')
+                    ->table('online_app_images')
+                    ->where('type', 'product')
+                    ->where('ref_id', $item->product_id)
+                    ->value('image_path');
 
-                        return [
-                            'image'                => $image ? asset('storage/' . $image) : null,
-                            'product_id'           => $item->product_id,
-                            'name'                 => $product ? $product->product_ename : 'منتج محذوف',
-                            'quantity'             => $item->quantity,
-                            'unit_price'           => $item->unit_price,
-                            'unit_tax'             => $item->unit_tax,
-                            'unit_price_after_tax' => $item->unit_price_after_tax,
-                            'total_price'          => $item->total_price,
-                        ];
-                    });
+                return [
+                    'image'                => $image ? asset('storage/' . $image) : null,
+                    'product_id'           => $item->product_id,
+                    'name'                 => $product ? $product->product_ename : 'منتج محذوف',
+                    'quantity'             => $item->quantity,
+                    'unit_price'           => $item->unit_price,
+                    'unit_tax'             => $item->unit_tax,
+                    'unit_price_after_tax' => $item->unit_price_after_tax,
+                    'total_price'          => $item->total_price,
+                ];
+            });
 
         return response()->json([
             'data' => [
@@ -144,47 +170,47 @@ class OrderServiceImpl implements OrderService
         $user_id = $request->user()->id;
 
         $orders = DB::connection('oracle_sales')
-                    ->table('orders_online_app')
-                    ->where('user_id', $user_id)
-                    ->orderBy('created_at', 'desc')
+            ->table('orders_online_app')
+            ->where('user_id', $user_id)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($order) {
+                $items = DB::connection('oracle_sales')
+                    ->table('order_items_online_app')
+                    ->where('order_id', $order->id)
                     ->get()
-                    ->map(function($order) {
-                        $items = DB::connection('oracle_sales')
-                                    ->table('order_items_online_app')
-                                    ->where('order_id', $order->id)
-                                    ->get()
-                                    ->map(function($item) {
-                                        $product = DB::connection('oracle_lmidc')
-                                                        ->table('to_sfa_products_android')
-                                                        ->where('product_id', $item->product_id)
-                                                        ->first();
+                    ->map(function ($item) {
+                        $product = DB::connection('oracle_lmidc')
+                            ->table('to_sfa_products_android')
+                            ->where('product_id', $item->product_id)
+                            ->first();
 
-                                        $image = DB::connection('oracle_sales')
-                                                    ->table('online_app_images')
-                                                    ->where('type', 'product')
-                                                    ->where('ref_id', $item->product_id)
-                                                    ->value('image_path');
-
-                                        return [
-                                            'image'                => $image ? asset('storage/' . $image) : null,
-                                            'product_id'           => $item->product_id,
-                                            'name'                 => $product ? $product->product_ename : 'منتج محذوف',
-                                            'quantity'             => $item->quantity,
-                                            'unit_price'           => $item->unit_price,
-                                            'unit_tax'             => $item->unit_tax,
-                                            'unit_price_after_tax' => $item->unit_price_after_tax,
-                                            'total_price'          => $item->total_price,
-                                        ];
-                                    });
+                        $image = DB::connection('oracle_sales')
+                            ->table('online_app_images')
+                            ->where('type', 'product')
+                            ->where('ref_id', $item->product_id)
+                            ->value('image_path');
 
                         return [
-                            'order_id'    => $order->id,
-                            'status'      => $order->status,
-                            'total_price' => $order->total_price,
-                            'created_at'  => $order->created_at,
-                            'items'       => $items,
+                            'image'                => $image ? asset('storage/' . $image) : null,
+                            'product_id'           => $item->product_id,
+                            'name'                 => $product ? $product->product_ename : 'منتج محذوف',
+                            'quantity'             => $item->quantity,
+                            'unit_price'           => $item->unit_price,
+                            'unit_tax'             => $item->unit_tax,
+                            'unit_price_after_tax' => $item->unit_price_after_tax,
+                            'total_price'          => $item->total_price,
                         ];
                     });
+
+                return [
+                    'order_id'    => $order->id,
+                    'status'      => $order->status,
+                    'total_price' => $order->total_price,
+                    'created_at'  => $order->created_at,
+                    'items'       => $items,
+                ];
+            });
 
         return response()->json([
             'data' => $orders,
@@ -196,10 +222,10 @@ class OrderServiceImpl implements OrderService
         $user_id = $request->user()->id;
 
         $order = DB::connection('oracle_sales')
-                    ->table('orders_online_app')
-                    ->where('id', $order_id)
-                    ->where('user_id', $user_id)
-                    ->first();
+            ->table('orders_online_app')
+            ->where('id', $order_id)
+            ->where('user_id', $user_id)
+            ->first();
 
         if (!$order) {
             return response()->json([
