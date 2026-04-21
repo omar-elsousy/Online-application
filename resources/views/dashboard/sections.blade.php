@@ -21,7 +21,7 @@
                             style="height:60px;width:100px;object-fit:cover;border-radius:6px;">
                     </td>
                     <td>
-                        <form method="POST" action="/dashboard/updateSortOrder/{{ $section->id }}" class="d-flex gap-2">
+                        <form method="POST" action="{{ asset('dashboard/updateSortOrder') }}/{{ $section->id }}" class="d-flex gap-2">
                             @csrf
                             <input type="number" name="sort_order" value="{{ $section->sort_order }}"
                                 class="form-control form-control-sm" style="width:80px;">
@@ -36,7 +36,7 @@
                         @endif
                     </td>
                     <td>
-                        <form method="POST" action="/dashboard/toggleSection/{{ $section->id }}">
+                        <form method="POST" action="{{ asset('dashboard/toggleSection') }}/{{ $section->id }}">
                             @csrf
                             @if($section->is_active_section)
                                 <button type="submit" class="btn btn-sm btn-warning">تعطيل</button>

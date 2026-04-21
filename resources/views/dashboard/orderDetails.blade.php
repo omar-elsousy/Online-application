@@ -8,7 +8,7 @@
             <div class="d-flex align-items-center gap-3">
                 @if($order->status == 'placed')
                     <span class="badge bg-warning fs-6">placed</span>
-                    <form method="POST" action="/dashboard/cancelOrder/{{ $order->id }}">
+                    <form method="POST" action="{{ asset('dashboard/cancelOrder') }}/{{ $order->id }}">
                         @csrf
                         <button type="submit" class="btn btn-danger btn-sm"
                             onclick="return confirm('هتلغي الأوردر ده؟')">
@@ -51,7 +51,7 @@
             </tbody>
         </table>
 
-        <a href="/dashboard/orders" class="btn btn-secondary mt-2">رجوع</a>
+        <a href="{{ asset('dashboard/orders') }}" class="btn btn-secondary mt-2">رجوع</a>
     </div>
 </div>
 @endsection

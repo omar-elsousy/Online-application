@@ -58,7 +58,7 @@ class UserServiceImpl implements UserService
             ->where('id', $user_id)
             ->delete();
 
-        return redirect('/dashboard/users');
+        return redirect(asset('dashboard/users'));
     }
 
     public function blockUser(Request $request, $user_id)
@@ -68,7 +68,7 @@ class UserServiceImpl implements UserService
             ->where('id', $user_id)
             ->update(['is_blocked' => 1]);
 
-        return redirect('/dashboard/users');
+        return redirect(asset('dashboard/users'));
     }
 
     public function unblockUser(Request $request, $user_id)
@@ -78,6 +78,6 @@ class UserServiceImpl implements UserService
             ->where('id', $user_id)
             ->update(['is_blocked' => 0]);
 
-        return redirect('/dashboard/users');
+        return redirect(asset('dashboard/users'));
     }
 }

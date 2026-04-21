@@ -20,7 +20,7 @@
                             </div>
                         @endif
 
-                        <form method="POST" action="/dashboard/loginPost">
+                        <form method="POST" action="{{ asset('dashboard/loginPost') }}">
                             @csrf
                             <div class="mb-3">
                                 <label>رقم الموبايل</label>

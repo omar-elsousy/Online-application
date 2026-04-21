@@ -92,7 +92,7 @@ class ImageServiceImpl implements ImageService
                 'created_at' => now(),
             ]);
 
-        return redirect('/dashboard/images');
+        return redirect(asset('dashboard/images'));
     }
 
     public function uploadCategoryImage(Request $request)
@@ -128,7 +128,7 @@ class ImageServiceImpl implements ImageService
                 'created_at' => now(),
             ]);
 
-        return redirect('/dashboard/images');
+        return redirect(asset('dashboard/images'));
     }
 
     public function uploadSectionImage(Request $request)
@@ -148,7 +148,7 @@ class ImageServiceImpl implements ImageService
                 'created_at' => now(),
             ]);
 
-        return redirect('/dashboard/images');
+        return redirect(asset('dashboard/images'));
     }
 
     public function deleteImage(Request $request, $image_id)
@@ -166,6 +166,6 @@ class ImageServiceImpl implements ImageService
                 ->delete();
         }
 
-        return redirect('/dashboard/images');
+        return redirect(asset('dashboard/images'));
     }
 }

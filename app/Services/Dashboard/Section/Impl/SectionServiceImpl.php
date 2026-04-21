@@ -33,7 +33,7 @@ class SectionServiceImpl implements SectionService
                 'is_active_section' => $section->is_active_section ? 0 : 1,
             ]);
 
-        return redirect('/dashboard/sections');
+        return redirect(asset('dashboard/sections'));
     }
 
     public function updateSortOrder(Request $request, $image_id)
@@ -49,6 +49,6 @@ class SectionServiceImpl implements SectionService
                 'sort_order' => $request->sort_order,
             ]);
 
-        return redirect('/dashboard/sections');
+        return redirect(asset('dashboard/sections'));
     }
 }

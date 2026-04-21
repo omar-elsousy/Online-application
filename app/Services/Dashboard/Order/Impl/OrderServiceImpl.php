@@ -32,7 +32,7 @@ class OrderServiceImpl implements OrderService
                     ->first();
 
         if (!$order) {
-            return redirect('/dashboard/orders');
+            return redirect(asset('dashboard/orders'));
         }
 
         $items = DB::connection('oracle_sales')
@@ -67,7 +67,7 @@ class OrderServiceImpl implements OrderService
                     ->first();
 
         if (!$order || $order->status != 'placed') {
-            return redirect('/dashboard/orders');
+            return redirect(asset('dashboard/orders'));
         }
 
         DB::connection('oracle_sales')
@@ -75,6 +75,7 @@ class OrderServiceImpl implements OrderService
             ->where('id', $order_id)
             ->update(['status' => 'canceled']);
 
-        return redirect('/dashboard/orders');
+        return redirect(asset('dashboard/orders'));
+
     }
 }

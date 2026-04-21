@@ -35,12 +35,12 @@ class AuthServiceImpl implements AuthService
             'admin_role' => $admin->role,
         ]);
 
-        return redirect('/dashboard/home');
+        return redirect(asset('dashboard/home'));
     }
 
     public function logout()
     {
         session()->forget('admin');
-        return redirect('/dashboard/login');
+        return redirect(asset('dashboard/login'));
     }
 }

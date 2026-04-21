@@ -11,7 +11,7 @@
                     <div class="alert alert-danger">{{ $errors->first() }}</div>
                 @endif
 
-                <form method="POST" action="/dashboard/addAdmin">
+                <form method="POST" action="{{ asset('dashboard/addAdmin') }}">
                     @csrf
                     <div class="mb-3">
                         <label>رقم الموبايل</label>
@@ -56,7 +56,7 @@
                             <td>{{ $admin->created_at }}</td>
                             <td>
                                 @if($admin->id != session('admin_id') && $admin->role != 'super_admin')
-                                    <form method="POST" action="/dashboard/deleteAdmin/{{ $admin->id }}">
+                                    <form method="POST" action="{{ asset('dashboard/deleteAdmin') }}/{{ $admin->id }}">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-danger"
                                             onclick="return confirm('هتحذف الأدمن ده؟')">حذف</button>

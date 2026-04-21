@@ -21,7 +21,7 @@
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
                 <h6 class="mb-3">رفع صورة منتج</h6>
-                <form method="POST" action="/dashboard/uploadProductImage" enctype="multipart/form-data" class="d-flex gap-2 align-items-end">
+                <form method="POST" action="{{ asset('dashboard/uploadProductImage') }}" enctype="multipart/form-data" class="d-flex gap-2 align-items-end">
                     @csrf
                     <div>
                         <label>المنتج</label>
@@ -48,7 +48,7 @@
                         <small>{{ $image->name }}</small>
                         <br>
                         <small>code : {{ $image->ref_id }}</small>
-                        <form method="POST" action="/dashboard/deleteImage/{{ $image->id }}">
+                        <form method="POST" action="{{ asset('dashboard/deleteImage') }}/{{ $image->id }}">
                             @csrf
                             <button type="submit" class="btn btn-sm btn-danger w-100 mt-1"
                                 onclick="return confirm('هتحذف الصورة دي؟')">حذف</button>
@@ -65,7 +65,7 @@
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
                 <h6 class="mb-3">رفع صورة كاتيجوري</h6>
-                <form method="POST" action="/dashboard/uploadCategoryImage" enctype="multipart/form-data" class="d-flex gap-2 align-items-end">
+                <form method="POST" action="{{ asset('dashboard/uploadCategoryImage') }}" enctype="multipart/form-data" class="d-flex gap-2 align-items-end">
                     @csrf
                     <div>
                         <label>الكاتيجوري</label>
@@ -92,7 +92,7 @@
                         <small>{{ $image->name }}</small>
                         <br>
                         <small>code : {{ $image->ref_id }}</small>   
-                        <form method="POST" action="/dashboard/deleteImage/{{ $image->id }}">
+                        <form method="POST" action="{{ asset('dashboard/deleteImage') }}/{{ $image->id }}">
                             @csrf
                             <button type="submit" class="btn btn-sm btn-danger w-100 mt-1"
                                 onclick="return confirm('هتحذف الصورة دي؟')">حذف</button>
@@ -109,7 +109,7 @@
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
                 <h6 class="mb-3">رفع صورة إعلان</h6>
-                <form method="POST" action="/dashboard/uploadSectionImage" enctype="multipart/form-data" class="d-flex gap-2 align-items-end">
+                <form method="POST" action="{{ asset('dashboard/uploadSectionImage') }}" enctype="multipart/form-data" class="d-flex gap-2 align-items-end">
                     @csrf
                     <div>
                         <label>الصورة</label>
@@ -125,7 +125,7 @@
                 <div class="card border-0 shadow-sm">
                     <img src="{{ asset('storage/' . $image->image_path) }}" class="card-img-top" style="height:120px;object-fit:cover;">
                     <div class="card-body p-2 text-center">
-                        <form method="POST" action="/dashboard/deleteImage/{{ $image->id }}">
+                        <form method="POST" action="{{ asset('dashboard/deleteImage') }}/{{ $image->id }}">
                             @csrf
                             <button type="submit" class="btn btn-sm btn-danger w-100 mt-1"
                                 onclick="return confirm('هتحذف الصورة دي؟')">حذف</button>

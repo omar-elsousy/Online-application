@@ -11,7 +11,7 @@
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
                 <h5 class="mb-3">إرسال لكل العملاء</h5>
-                <form method="POST" action="/dashboard/sendToAll">
+                <form method="POST" action="{{ asset('dashboard/sendToAll') }}">
                     @csrf
                     <div class="mb-3">
                         <label>العنوان</label>
@@ -31,7 +31,7 @@
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
                 <h5 class="mb-3">إرسال لعميل معين</h5>
-                <form method="POST" action="/dashboard/sendToUser">
+                <form method="POST" action="{{ asset('dashboard/sendToUser') }}">
                     @csrf
                     <div class="mb-3">
                         <label>العميل</label>

@@ -86,6 +86,6 @@ class StockServiceImpl implements StockService
                 ]);
         }
 
-        return redirect('/dashboard/stock?warehouse_id=' . $warehouse_id);
+        return redirect(asset('dashboard/stock') . '?warehouse_id=' . $warehouse_id);
     }
 }

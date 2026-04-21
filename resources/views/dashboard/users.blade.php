@@ -5,7 +5,7 @@
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="mb-0">العملاء</h5>
-            <form method="GET" action="/dashboard/users" class="d-flex gap-2">
+            <form method="GET" action="{{ asset('dashboard/users') }}" class="d-flex gap-2">
                 <input type="text" name="search" class="form-control" placeholder="ابحث برقم الموبايل" value="{{ request('search') }}">
                 <button type="submit" class="btn btn-primary">بحث</button>
             </form>
@@ -44,17 +44,17 @@
                     <td>{{ $user['created_at'] }}</td>
                     <td class="d-flex gap-1">
                         @if($user['is_blocked'])
-                            <form method="POST" action="/dashboard/unblockUser/{{ $user['id'] }}">
+                            <form method="POST" action="{{ asset('dashboard/unblockUser') }}/{{ $user['id'] }}">
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-success">فك الحظر</button>
                             </form>
                         @else
-                            <form method="POST" action="/dashboard/blockUser/{{ $user['id'] }}">
+                            <form method="POST" action="{{ asset('dashboard/blockUser') }}/{{ $user['id'] }}">
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-warning">حظر</button>
                             </form>
                         @endif
-                        <form method="POST" action="/dashboard/deleteUser/{{ $user['id'] }}">
+                        <form method="POST" action="{{ asset('dashboard/deleteUser') }}/{{ $user['id'] }}">
                             @csrf
                             <button type="submit" class="btn btn-sm btn-danger"
                                 onclick="return confirm('هتحذف العميل ده؟')">حذف</button>

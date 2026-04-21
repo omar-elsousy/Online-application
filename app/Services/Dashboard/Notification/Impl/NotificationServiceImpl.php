@@ -55,7 +55,7 @@ class NotificationServiceImpl implements NotificationService
             }
         }
 
-        return redirect('/dashboard/notifications')->with('success', 'تم إرسال الإشعار بنجاح');
+        return redirect(asset('dashboard/notifications'))->with('success', 'تم إرسال الإشعار بنجاح');
     }
 
     public function sendToUser(Request $request)
@@ -88,6 +88,6 @@ class NotificationServiceImpl implements NotificationService
             }
         }
 
-        return redirect('/dashboard/notifications')->with('success', 'تم إرسال الإشعار بنجاح');
+        return redirect(asset('dashboard/notifications'))->with('success', 'تم إرسال الإشعار بنجاح');
     }
 }

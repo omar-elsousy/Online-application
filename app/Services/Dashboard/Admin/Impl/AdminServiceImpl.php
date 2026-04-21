@@ -45,14 +45,14 @@ class AdminServiceImpl implements AdminService
                 'updated_at' => now(),
             ]);
 
-        return redirect('/dashboard/admins');
+        return redirect(asset('dashboard/admins'));
     }
 
     public function deleteAdmin(Request $request, $admin_id)
     {
         // مش هيحذف نفسه
         if ($admin_id == session('admin_id')) {
-            return redirect('/dashboard/admins');
+            return redirect(asset('dashboard/admins'));
         }
 
         DB::connection('oracle_sales')
@@ -60,6 +60,6 @@ class AdminServiceImpl implements AdminService
             ->where('id', $admin_id)
             ->delete();
 
-        return redirect('/dashboard/admins');
+        return redirect(asset('dashboard/admins'));
     }
 }

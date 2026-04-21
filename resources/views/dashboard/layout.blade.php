@@ -55,32 +55,32 @@
         <div class="brand">
             <i class="fas fa-store me-2"></i> لوحة التحكم
         </div>
-        <a href="/dashboard/home" class="{{ request()->is('dashboard/home') ? 'active' : '' }}">
+        <a href="{{ asset('dashboard/home') }}" class="{{ request()->is('dashboard/home') ? 'active' : '' }}">
             <i class="fas fa-chart-pie me-2"></i> الرئيسية
         </a>
-        <a href="/dashboard/orders" class="{{ request()->is('dashboard/orders*') ? 'active' : '' }}">
+        <a href="{{ asset('dashboard/orders') }}" class="{{ request()->is('dashboard/orders*') ? 'active' : '' }}">
             <i class="fas fa-box me-2"></i> الأوردرات
         </a>
-        <a href="/dashboard/images" class="{{ request()->is('dashboard/images*') ? 'active' : '' }}">
+        <a href="{{ asset('dashboard/images') }}" class="{{ request()->is('dashboard/images*') ? 'active' : '' }}">
             <i class="fas fa-image me-2"></i> الصور
         </a>
-        <a href="/dashboard/sections" class="{{ request()->is('dashboard/sections*') ? 'active' : '' }}">
+        <a href="{{ asset('dashboard/sections') }}" class="{{ request()->is('dashboard/sections*') ? 'active' : '' }}">
             <i class="fas fa-th-large me-2"></i> الاعلانات
         </a>
-        <a href="/dashboard/visibility" class="{{ request()->is('dashboard/visibility*') ? 'active' : '' }}">
+        <a href="{{ asset('dashboard/visibility') }}" class="{{ request()->is('dashboard/visibility*') ? 'active' : '' }}">
             <i class="fas fa-eye me-2"></i> إظهار / إخفاء
         </a>
-        <a href="/dashboard/notifications" class="{{ request()->is('dashboard/notifications*') ? 'active' : '' }}">
+        <a href="{{ asset('dashboard/notifications') }}" class="{{ request()->is('dashboard/notifications*') ? 'active' : '' }}">
             <i class="fas fa-bell me-2"></i> الإشعارات
         </a>
-        <a href="/dashboard/stock" class="{{ request()->is('dashboard/stock*') ? 'active' : '' }}">
+        <a href="{{ asset('dashboard/stock') }}" class="{{ request()->is('dashboard/stock*') ? 'active' : '' }}">
             <i class="fas fa-boxes me-2"></i> الستوك
         </a>
-        <a href="/dashboard/users" class="{{ request()->is('dashboard/users*') ? 'active' : '' }}">
+        <a href="{{ asset('dashboard/users') }}" class="{{ request()->is('dashboard/users*') ? 'active' : '' }}">
             <i class="fas fa-users me-2"></i> العملاء
         </a>
         @if(session('admin')->role == 'super_admin')
-        <a href="/dashboard/admins" class="{{ request()->is('dashboard/admins*') ? 'active' : '' }}">
+        <a href="{{ asset('dashboard/admins') }}" class="{{ request()->is('dashboard/admins*') ? 'active' : '' }}">
             <i class="fas fa-user-shield me-2"></i> الأدمنز
         </a>
         @endif
@@ -90,7 +90,7 @@
     <div class="main-content">
         <div class="topbar">
             <span>أهلاً {{ session('admin')->mobile }}</span>
-            <form method="POST" action="/dashboard/logout">
+            <form method="POST" action="{{ asset('dashboard/logout') }}">
                 @csrf
                 <button type="submit" class="btn btn-sm btn-danger">
                     <i class="fas fa-sign-out-alt me-1"></i> خروج

@@ -62,7 +62,7 @@ class VisibilityServiceImpl implements VisibilityService
                 ->insert(['product_id' => $product_id]);
         }
 
-        return redirect('/dashboard/visibility');
+        return redirect(asset('dashboard/visibility'));
     }
 
     public function showProduct(Request $request, $product_id)
@@ -72,7 +72,7 @@ class VisibilityServiceImpl implements VisibilityService
             ->where('product_id', $product_id)
             ->delete();
 
-        return redirect('/dashboard/visibility');
+        return redirect(asset('dashboard/visibility'));
     }
 
     public function hideCategory(Request $request, $family_id)
@@ -88,7 +88,7 @@ class VisibilityServiceImpl implements VisibilityService
                 ->insert(['family_id' => $family_id]);
         }
 
-        return redirect('/dashboard/visibility');
+        return redirect(asset('dashboard/visibility'));
     }
 
     public function showCategory(Request $request, $family_id)
@@ -98,6 +98,6 @@ class VisibilityServiceImpl implements VisibilityService
             ->where('family_id', $family_id)
             ->delete();
 
-        return redirect('/dashboard/visibility');
+        return redirect(asset('dashboard/visibility'));
     }
 }

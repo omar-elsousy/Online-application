@@ -5,7 +5,7 @@
     <div class="card-body">
         <h5 class="mb-4">الستوك</h5>
 
-        <form method="GET" action="/dashboard/stock" class="row g-2 mb-4">
+        <form method="GET" action="{{ asset('dashboard/stock') }}" class="row g-2 mb-4">
             <div class="col-md-4">
                 <select name="warehouse_id" class="form-select" onchange="this.form.submit()">
                     <option value="">اختر مخزن</option>
@@ -51,7 +51,7 @@
                         @endif
                     </td>
                     <td>
-                        <form method="POST" action="/dashboard/toggleStock/{{ $product['product_id'] }}/{{ $product['warehouse_id'] }}">
+                        <form method="POST" action="{{ asset('dashboard/toggleStock') }}/{{ $product['product_id'] }}/{{ $product['warehouse_id'] }}">
                             @csrf
                             @if($product['in_stock'])
                                 <button type="submit" class="btn btn-sm btn-danger">غلق</button>

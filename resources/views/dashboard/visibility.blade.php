@@ -43,12 +43,12 @@
                             </td>
                             <td>
                                 @if($product['is_hidden'])
-                                    <form method="POST" action="/dashboard/showProduct/{{ $product['product_id'] }}">
+                                    <form method="POST" action="{{ asset('dashboard/showProduct') }}/{{ $product['product_id'] }}">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-success">إظهار</button>
                                     </form>
                                 @else
-                                    <form method="POST" action="/dashboard/hideProduct/{{ $product['product_id'] }}">
+                                    <form method="POST" action="{{ asset('dashboard/hideProduct') }}/{{ $product['product_id'] }}">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-danger">إخفاء</button>
                                     </form>
@@ -92,12 +92,12 @@
                             </td>
                             <td>
                                 @if($category['is_hidden'])
-                                    <form method="POST" action="/dashboard/showCategory/{{ $category['family_id'] }}">
+                                    <form method="POST" action="{{ asset('dashboard/showCategory') }}/{{ $category['family_id'] }}">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-success">إظهار</button>
                                     </form>
                                 @else
-                                    <form method="POST" action="/dashboard/hideCategory/{{ $category['family_id'] }}">
+                                    <form method="POST" action="{{ asset('dashboard/hideCategory') }}/{{ $category['family_id'] }}">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-danger">إخفاء</button>
                                     </form>

@@ -5,7 +5,7 @@
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="mb-0">الأوردرات</h5>
-            <form method="GET" action="/dashboard/orders" class="d-flex gap-2">
+            <form method="GET" action="{{ asset('dashboard/orders') }}" class="d-flex gap-2">
                 <input type="text" name="search" class="form-control" placeholder="ابحث برقم الأوردر أو العميل" value="{{ request('search') }}">
                 <button type="submit" class="btn btn-primary">بحث</button>
             </form>
@@ -37,7 +37,7 @@
                     </td>
                     <td>{{ $order->created_at }}</td>
                     <td>
-                        <a href="/dashboard/orderDetails/{{ $order->id }}" class="btn btn-sm btn-info">تفاصيل</a>
+                        <a href="{{ asset('dashboard/orderDetails') }}/{{ $order->id }}" class="btn btn-sm btn-info">تفاصيل</a>
                     </td>
                 </tr>
                 @endforeach
