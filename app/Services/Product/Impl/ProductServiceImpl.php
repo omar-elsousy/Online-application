@@ -60,7 +60,7 @@ class ProductServiceImpl implements ProductService
                     'product_id' => $product->product_id,
                     'name'       => $product->product_ename,
                     'price'      => round($product->pricelist_carton + $tax, 1),
-                    'in_stock'   => $stock ? (bool)$stock->in_stock : true,
+                    'status' => $stock ? ($stock->in_stock ? 'in stock' : 'out of stock') : 'in stock',
                 ];
             });
 
@@ -121,7 +121,7 @@ class ProductServiceImpl implements ProductService
                 'category' => $category->name,
                 'price'    => $price->pricelist_carton,
                 'tax'      => $tax,
-                'in_stock' => $stock ? (bool)$stock->in_stock : true,
+                'status' => $stock ? ($stock->in_stock ? 'in stock' : 'out of stock') : 'in stock',
             ],
         ], 200);
     }
