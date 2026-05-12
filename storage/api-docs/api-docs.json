@@ -1,0 +1,1551 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Online Application API",
+        "description": "API Documentation for Online Application",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "تسجيل مستخدم جديد",
+                "operationId": "f367ea894b2ac44a9607f8e0a9a03537",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mobile",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "mobile": {
+                                        "type": "string",
+                                        "example": "01012345678"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "تم التسجيل بنجاح",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم التسجيل بنجاح"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "رقم الموبايل مسجل بالفعل",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "رقم الموبايل مسجل بالفعل"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "تسجيل الدخول",
+                "operationId": "ec9c379d2a959de66404708dd4a9322d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mobile",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "mobile": {
+                                        "type": "string",
+                                        "example": "01012345678"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "تم تسجيل الدخول بنجاح",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم تسجيل الدخول بنجاح"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|abc123..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "موبايل أو باسورد غلط",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "موبايل أو باسورد غلط"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "تم حظر الحساب",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم حظر حسابك"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "تسجيل الخروج",
+                "operationId": "cc14526f9abd470d63047b1c05aef0c3",
+                "responses": {
+                    "200": {
+                        "description": "تم تسجيل الخروج بنجاح",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم تسجيل الخروج بنجاح"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/changePassword": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "تغيير الباسورد",
+                "operationId": "ddf01d4b607ccc5d5587513709721d11",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "current_password",
+                                    "new_password",
+                                    "new_password_confirmation"
+                                ],
+                                "properties": {
+                                    "current_password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "example": "newpass123"
+                                    },
+                                    "new_password_confirmation": {
+                                        "type": "string",
+                                        "example": "newpass123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "تم تغيير الباسورد بنجاح",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم تغيير الباسورد بنجاح"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "الباسورد الحالي غلط",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "الباسورد الحالي غلط"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/sendOtp": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "إرسال كود OTP لإعادة تعيين الباسورد",
+                "operationId": "2df41d4d729e87ebcde25d6108a475bc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mobile"
+                                ],
+                                "properties": {
+                                    "mobile": {
+                                        "type": "string",
+                                        "example": "01012345678"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "تم إرسال الكود",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم إرسال الكود على موبايلك"
+                                        },
+                                        "otp": {
+                                            "type": "integer",
+                                            "example": 123456
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "رقم الموبايل مش موجود",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "رقم الموبايل مش موجود"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/resetPassword": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "إعادة تعيين الباسورد عن طريق OTP",
+                "operationId": "bacab430fba249422be491934aebbab2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "otp",
+                                    "new_password",
+                                    "new_password_confirmation"
+                                ],
+                                "properties": {
+                                    "otp": {
+                                        "type": "integer",
+                                        "example": 123456
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "example": "newpass123"
+                                    },
+                                    "new_password_confirmation": {
+                                        "type": "string",
+                                        "example": "newpass123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "تم تغيير الباسورد بنجاح",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم تغيير الباسورد بنجاح"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "الكود غلط أو منتهي",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "الكود غلط"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/addToCart/{product_id}": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "إضافة منتج للكارت",
+                "operationId": "39b01a344f6996cb26ef7c291b61ba55",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 101
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "quantity": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "تم الإضافة للكارت بنجاح",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم الإضافة للكارت بنجاح"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "المنتج out of stock",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "المنتج ده out of stock"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/getCart": {
+            "get": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "جلب محتويات الكارت",
+                "operationId": "e685f97e7c56857a0acdfb49ac1c1d32",
+                "responses": {
+                    "200": {
+                        "description": "بيانات الكارت",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "image": {
+                                                                "type": "string",
+                                                                "example": "http://example.com/storage/products/img.jpg",
+                                                                "nullable": true
+                                                            },
+                                                            "product_id": {
+                                                                "type": "integer",
+                                                                "example": 101
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "منتج A"
+                                                            },
+                                                            "quantity": {
+                                                                "type": "integer",
+                                                                "example": 2
+                                                            },
+                                                            "unit_price": {
+                                                                "type": "number",
+                                                                "example": 50
+                                                            },
+                                                            "unit_tax": {
+                                                                "type": "number",
+                                                                "example": 7.5
+                                                            },
+                                                            "unit_price_after_tax": {
+                                                                "type": "number",
+                                                                "example": 57.5
+                                                            },
+                                                            "total_price": {
+                                                                "type": "number",
+                                                                "example": 115
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "number_of_products": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "final_price": {
+                                                    "type": "number",
+                                                    "example": 345
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/removeFromCart/{product_id}": {
+            "delete": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "حذف منتج من الكارت",
+                "operationId": "4114daae56e47dfb0d4b5b1bba78216e",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 101
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "تم مسح المنتج من الكارت بنجاح",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم مسح المنتج من الكارت بنجاح"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "المنتج مش موجود في الكارت",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "المنتج مش موجود في الكارت"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/addToFavourites/{product_id}": {
+            "post": {
+                "tags": [
+                    "Favourites"
+                ],
+                "summary": "إضافة منتج للمفضلة",
+                "operationId": "964258ee78b40a1cd32e074cd8ae3deb",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 101
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "تم الإضافة للمفضلة بنجاح",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم الإضافة للمفضلة بنجاح"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "المنتج موجود بالفعل في المفضلة",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "المنتج موجود بالفعل في المفضلة"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/getFavourites": {
+            "get": {
+                "tags": [
+                    "Favourites"
+                ],
+                "summary": "جلب المفضلة",
+                "operationId": "feee21e64ccd9257c7a291e9e7154ea4",
+                "responses": {
+                    "200": {
+                        "description": "قائمة المفضلة",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "image": {
+                                                        "type": "string",
+                                                        "example": "http://example.com/storage/products/img.jpg",
+                                                        "nullable": true
+                                                    },
+                                                    "product_id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "منتج A"
+                                                    },
+                                                    "price": {
+                                                        "type": "number",
+                                                        "example": 57.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/saveDeviceToken": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "حفظ Device Token للـ Push Notifications",
+                "operationId": "10aec980027462fe2c783b90c6a2564d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": "fcm_device_token_here"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "تم حفظ الجهاز بنجاح",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم حفظ الجهاز بنجاح"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/placeOrder": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "تأكيد الطلب",
+                "operationId": "21dbb34358712a9e97ec41b1f266b281",
+                "responses": {
+                    "201": {
+                        "description": "تم طلب الأوردر بنجاح",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم طلب الأوردر بنجاح"
+                                        },
+                                        "order_id": {
+                                            "type": "integer",
+                                            "example": 55
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "الكارت فاضي أو منتج out of stock",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "الكارت فاضي"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/getOrderDetails/{order_id}": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "تفاصيل أوردر معين",
+                "operationId": "f4c57c2cd7b5ca28cd0afab27f08f86c",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 55
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "تفاصيل الأوردر",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "order_id": {
+                                                    "type": "integer",
+                                                    "example": 55
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "placed"
+                                                },
+                                                "final_price": {
+                                                    "type": "number",
+                                                    "example": 345
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2024-01-01 10:00:00"
+                                                },
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "image": {
+                                                                "type": "string",
+                                                                "example": "http://example.com/storage/products/img.jpg",
+                                                                "nullable": true
+                                                            },
+                                                            "product_id": {
+                                                                "type": "integer",
+                                                                "example": 101
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "منتج A"
+                                                            },
+                                                            "quantity": {
+                                                                "type": "integer",
+                                                                "example": 2
+                                                            },
+                                                            "unit_price": {
+                                                                "type": "number",
+                                                                "example": 50
+                                                            },
+                                                            "unit_tax": {
+                                                                "type": "number",
+                                                                "example": 7.5
+                                                            },
+                                                            "unit_price_after_tax": {
+                                                                "type": "number",
+                                                                "example": 57.5
+                                                            },
+                                                            "total_price": {
+                                                                "type": "number",
+                                                                "example": 115
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "الأوردر مش موجود",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "الأوردر مش موجود"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/getUserOrdersHistory": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "سجل الطلبات بتاع اليوزر",
+                "operationId": "24e75b4ad611c4254e9ecc099917cdbf",
+                "responses": {
+                    "200": {
+                        "description": "قائمة الطلبات",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "order_id": {
+                                                        "type": "integer",
+                                                        "example": 55
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "placed"
+                                                    },
+                                                    "total_price": {
+                                                        "type": "number",
+                                                        "example": 345
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "example": "2024-01-01 10:00:00"
+                                                    },
+                                                    "items": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "image": {
+                                                                    "type": "string",
+                                                                    "nullable": true
+                                                                },
+                                                                "product_id": {
+                                                                    "type": "integer",
+                                                                    "example": 101
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "منتج A"
+                                                                },
+                                                                "quantity": {
+                                                                    "type": "integer",
+                                                                    "example": 2
+                                                                },
+                                                                "unit_price": {
+                                                                    "type": "number",
+                                                                    "example": 50
+                                                                },
+                                                                "unit_tax": {
+                                                                    "type": "number",
+                                                                    "example": 7.5
+                                                                },
+                                                                "unit_price_after_tax": {
+                                                                    "type": "number",
+                                                                    "example": 57.5
+                                                                },
+                                                                "total_price": {
+                                                                    "type": "number",
+                                                                    "example": 115
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/cancelOrder/{order_id}": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "إلغاء أوردر",
+                "operationId": "6c8becb8e6925f10cb933dfe37e98ea0",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 55
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "تم إلغاء الأوردر بنجاح",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم إلغاء الأوردر بنجاح"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "مش ممكن تلغي الأوردر ده",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "مش ممكن تلغي الأوردر ده"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "الأوردر مش موجود",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "الأوردر مش موجود"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/getCategories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "جلب كل الكاتيجوريز",
+                "operationId": "15b15350c4e882a3b71a9981e82d1dea",
+                "responses": {
+                    "200": {
+                        "description": "قائمة الكاتيجوريز",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "image": {
+                                                        "type": "string",
+                                                        "example": "http://example.com/storage/categories/img.jpg",
+                                                        "nullable": true
+                                                    },
+                                                    "family_id": {
+                                                        "type": "integer",
+                                                        "example": 10
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "مشروبات"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/getProducts/{family_id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "جلب المنتجات بتاعت فاميلي معينة",
+                "operationId": "ff84e5a44ce519f295eaed60ed444197",
+                "parameters": [
+                    {
+                        "name": "family_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 10
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "قائمة المنتجات",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "image": {
+                                                        "type": "string",
+                                                        "example": "http://example.com/storage/products/img.jpg",
+                                                        "nullable": true
+                                                    },
+                                                    "product_id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "منتج A"
+                                                    },
+                                                    "price": {
+                                                        "type": "number",
+                                                        "example": 57.5
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "in stock",
+                                                            "out of stock"
+                                                        ],
+                                                        "example": "in stock"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/getProductDetails/{product_id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "تفاصيل منتج معين",
+                "operationId": "da93e963727ef1a7c9e76c632a93fb03",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 101
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "تفاصيل المنتج",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "image": {
+                                                    "type": "string",
+                                                    "example": "http://example.com/storage/products/img.jpg",
+                                                    "nullable": true
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "منتج A"
+                                                },
+                                                "code": {
+                                                    "type": "integer",
+                                                    "example": 101
+                                                },
+                                                "category": {
+                                                    "type": "string",
+                                                    "example": "مشروبات"
+                                                },
+                                                "price": {
+                                                    "type": "number",
+                                                    "example": 50
+                                                },
+                                                "tax": {
+                                                    "type": "number",
+                                                    "example": 7.5
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "in stock",
+                                                        "out of stock"
+                                                    ],
+                                                    "example": "in stock"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "المنتج مش موجود",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "المنتج مش موجود"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/getSections": {
+            "get": {
+                "tags": [
+                    "Sections"
+                ],
+                "summary": "جلب السيكشنز (البانرات)",
+                "operationId": "4e14666606089c9108bb2e56011be42a",
+                "responses": {
+                    "200": {
+                        "description": "قائمة السيكشنز",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "image": {
+                                                        "type": "string",
+                                                        "example": "http://example.com/storage/sections/img.jpg"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/getTarget": {
+            "get": {
+                "tags": [
+                    "Target"
+                ],
+                "summary": "جلب تارجت الشهر الحالي لليوزر",
+                "operationId": "3fbe28ad53a9c840127523cdb79a1ef4",
+                "responses": {
+                    "200": {
+                        "description": "بيانات التارجت",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "achieved": {
+                                                    "type": "number",
+                                                    "example": 15000
+                                                },
+                                                "target_sales": {
+                                                    "type": "number",
+                                                    "example": 50000
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "العميل مش موجود أو مفيش تارجت",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "مفيش تارجت للشهر الحالي"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Cart",
+            "description": "Cart"
+        },
+        {
+            "name": "Favourites",
+            "description": "Favourites"
+        },
+        {
+            "name": "Notifications",
+            "description": "Notifications"
+        },
+        {
+            "name": "Orders",
+            "description": "Orders"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
+            "name": "Products",
+            "description": "Products"
+        },
+        {
+            "name": "Sections",
+            "description": "Sections"
+        },
+        {
+            "name": "Target",
+            "description": "Target"
+        }
+    ]
+}
