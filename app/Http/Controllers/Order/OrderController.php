@@ -46,6 +46,37 @@ class OrderController extends Controller
 
     /**
      * @OA\Get(
+     *     path="/getOrders",
+     *     summary="جلب جميع الطلبات",
+     *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="قائمة الطلبات",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="order_id", type="integer", example=55),
+     *                     @OA\Property(property="status", type="string", example="placed"),
+     *                     @OA\Property(property="final_price", type="number", example=345.0),
+     *                     @OA\Property(property="created_at", type="string", example="2024-01-01 10:00:00")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
+    public function getOrders(Request $request)
+    {
+        return $this->orderService->getOrders($request);
+    }
+
+    /**
+     * @OA\Get(
      *     path="/getOrderDetails/{order_id}",
      *     summary="تفاصيل أوردر معين",
      *     tags={"Orders"},

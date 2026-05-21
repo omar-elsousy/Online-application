@@ -110,6 +110,29 @@ class OrderServiceImpl implements OrderService
         ], 201);
     }
 
+    public function getOrders(Request $request)
+    {
+        $user_id = $request->user()->id;
+
+        $orders = DB::connection('oracle_sales')
+            ->table('orders_online_app')
+            ->where('user_id', $user_id)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($order) {
+                return [
+                    'order_id'    => $order->id,
+                    'status'      => $order->status,
+                    'final_price' => $order->total_price,
+                    'created_at'  => $order->created_at,
+                ];
+            });
+
+        return response()->json([
+            'data' => $orders,
+        ], 200);
+    }
+
     public function getOrderDetails(Request $request, $order_id)
     {
         $user_id = $request->user()->id;
