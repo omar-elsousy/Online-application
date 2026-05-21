@@ -48,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/removeFromCart/{product_id}', [CartController::class, 'removeFromCart']);
     Route::post('/addToFavourites/{product_id}', [FavouriteController::class, 'addToFavourites']);
     Route::get('/getFavourites', [FavouriteController::class, 'getFavourites']);
+    Route::delete('/removeFromFavourites/{product_id}', [FavouriteController::class, 'removeFromFavourites']);
     Route::post('/changePassword', [AuthController::class, 'changePassword']);
     Route::post('/saveDeviceToken', [NotificationController::class, 'saveDeviceToken']);
 });

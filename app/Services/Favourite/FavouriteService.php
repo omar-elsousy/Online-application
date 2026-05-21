@@ -8,4 +8,5 @@ interface FavouriteService
 {
     public function addToFavourites(Request $request, $product_id);
     public function getFavourites(Request $request);
+    public function removeFromFavourites(Request $request, $product_id);
 }

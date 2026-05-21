@@ -80,4 +80,31 @@ class FavouriteController extends Controller
     {
         return $this->favouriteService->getFavourites($request);
     }
+    /**
+     * @OA\Delete(
+     *     path="/removeFromFavourites/{product_id}",
+     *     summary="إزالة منتج من المفضلة",
+     *     tags={"Favourites"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="product_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         example=101
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="تمت إزالة المنتج من المفضلة بنجاح",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="تمت إزالة المنتج من المفضلة بنجاح")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
+    public function removeFromFavourites(Request $request, $product_id)
+    {
+        return $this->favouriteService->removeFromFavourites($request, $product_id);
+    }
 }

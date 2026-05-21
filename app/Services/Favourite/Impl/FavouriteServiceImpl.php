@@ -78,4 +78,19 @@ class FavouriteServiceImpl implements FavouriteService
             'data' => $favourites,
         ], 200);
     }
+
+    public function removeFromFavourites(Request $request, $product_id)
+    {
+        $user_id = $request->user()->id;
+
+        DB::connection('oracle_sales')
+            ->table('favourites_online_app')
+            ->where('user_id', $user_id)
+            ->where('product_id', $product_id)
+            ->delete();
+
+        return response()->json([
+            'message' => 'تم إزالة المنتج من المفضلة بنجاح',
+        ], 200);
+    }
 }
