@@ -63,7 +63,7 @@ class ImageServiceImpl implements ImageService
     {
         $request->validate([
             'product_id' => 'required',
-            'image'      => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'image'      => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
         $path = $request->file('image')->store('images/products', 'public');
@@ -134,7 +134,7 @@ class ImageServiceImpl implements ImageService
     public function uploadSectionImage(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
         $path = $request->file('image')->store('images/sections', 'public');
