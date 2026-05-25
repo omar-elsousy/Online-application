@@ -99,7 +99,7 @@ class ImageServiceImpl implements ImageService
     {
         $request->validate([
             'family_id' => 'required',
-            'image'     => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'image'     => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
         $path = $request->file('image')->store('images/categories', 'public');
