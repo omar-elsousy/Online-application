@@ -23,6 +23,19 @@ class OrderServiceImpl implements OrderService
             ], 400);
         }
 
+        // تحقق إن مفيش أوردر شغال
+        $activeOrder = DB::connection('oracle_sales')
+            ->table('orders_online_app')
+            ->where('user_id', $user_id)
+            ->whereIn('status', [1, 2])
+            ->first();
+
+        if ($activeOrder) {
+            return response()->json([
+                'message' => 'لديك طلب قيد المعالجة، يرجى الانتظار حتى يتم تسليمه أو إلغاؤه',
+            ], 400);
+        }
+
         // جيب الـ warehouse_id بتاع اليوزر
         $user = DB::connection('oracle_sales')
             ->table('online_app_users')
@@ -80,7 +93,7 @@ class OrderServiceImpl implements OrderService
             ->insertGetId([
                 'user_id'     => $user_id,
                 'total_price' => round($total_price, 1),
-                'status'      => 'placed',
+                'status'      => 1,
                 'created_at'  => now(),
             ]);
 
@@ -122,7 +135,13 @@ class OrderServiceImpl implements OrderService
             ->map(function ($order) {
                 return [
                     'order_id'    => $order->id,
-                    'status'      => $order->status,
+                    'status'      => match ((int)$order->status) {
+                        1 => 'placed',
+                        2 => 'confirmed',
+                        4 => 'delivered',
+                        6 => 'canceled',
+                        default => 'unknown',
+                    },
                     'final_price' => $order->total_price,
                     'created_at'  => $order->created_at,
                 ];
@@ -180,7 +199,13 @@ class OrderServiceImpl implements OrderService
         return response()->json([
             'data' => [
                 'order_id'    => $order->id,
-                'status'      => $order->status,
+                'status'      => match ((int)$order->status) {
+                    1 => 'placed',
+                    2 => 'confirmed',
+                    4 => 'delivered',
+                    6 => 'canceled',
+                    default => 'unknown',
+                },
                 'final_price' => $order->total_price,
                 'created_at'  => $order->created_at,
                 'items'       => $items,
@@ -228,7 +253,13 @@ class OrderServiceImpl implements OrderService
 
                 return [
                     'order_id'    => $order->id,
-                    'status'      => $order->status,
+                    'status'      => match ((int)$order->status) {
+                        1 => 'placed',
+                        2 => 'confirmed',
+                        4 => 'delivered',
+                        6 => 'canceled',
+                        default => 'unknown',
+                    },
                     'total_price' => $order->total_price,
                     'created_at'  => $order->created_at,
                     'items'       => $items,
@@ -256,7 +287,7 @@ class OrderServiceImpl implements OrderService
             ], 404);
         }
 
-        if ($order->status != 'placed') {
+        if ($order->status != 1) {
             return response()->json([
                 'message' => 'مش ممكن تلغي الأوردر ده',
             ], 400);
@@ -265,7 +296,7 @@ class OrderServiceImpl implements OrderService
         DB::connection('oracle_sales')
             ->table('orders_online_app')
             ->where('id', $order_id)
-            ->update(['status' => 'canceled']);
+            ->update(['status' => 6]);
 
         // بعت notification
         $notificationService = app(\App\Services\Notification\NotificationService::class);
