@@ -18,11 +18,23 @@ class AuthServiceImpl implements AuthService
             'password' => 'required|min:6|confirmed',
         ]);
 
-        // نتحقق يدوياً إن الموبايل مش موجود
+        // تحقق إن الموبايل موجود في pos_inf
+        $posExists = DB::connection('oracle_lmidc')
+                        ->table('pos_inf')
+                        ->where('mobile', $request->mobile)
+                        ->first();
+
+        if (!$posExists) {
+            return response()->json([
+                'message' => 'عذرا انت لست عميل لدى منصور',
+            ], 403);
+        }
+
+        // تحقق إن الموبايل مش مسجل
         $exists = DB::connection('oracle_sales')
-            ->table('online_app_users')
-            ->where('mobile', $request->mobile)
-            ->first();
+                    ->table('online_app_users')
+                    ->where('mobile', $request->mobile)
+                    ->first();
 
         if ($exists) {
             return response()->json([
