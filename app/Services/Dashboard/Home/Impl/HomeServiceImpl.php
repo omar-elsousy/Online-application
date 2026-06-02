@@ -16,7 +16,7 @@ class HomeServiceImpl implements HomeService
 
         $totalSales = DB::connection('oracle_sales')
                          ->table('orders_online_app')
-                         ->where('status', 'placed')
+                         ->where('status', 4)
                          ->sum('total_price');
 
         $totalUsers = DB::connection('oracle_sales')
