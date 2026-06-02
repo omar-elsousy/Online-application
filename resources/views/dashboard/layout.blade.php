@@ -70,6 +70,9 @@
         <a href="{{ asset('dashboard/visibility') }}" class="{{ request()->is('dashboard/visibility*') ? 'active' : '' }}">
             <i class="fas fa-eye me-2"></i> إظهار / إخفاء
         </a>
+        <a href="{{ asset('dashboard/latestOffers') }}" class="{{ request()->is('dashboard/latestOffers*') ? 'active' : '' }}">
+            <i class="fas fa-bolt me-2"></i> أحدث العروض
+        </a>
         <a href="{{ asset('dashboard/notifications') }}" class="{{ request()->is('dashboard/notifications*') ? 'active' : '' }}">
             <i class="fas fa-bell me-2"></i> الإشعارات
         </a>

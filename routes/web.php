@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Dashboard\LatestOffersController;
 use App\Http\Controllers\Dashboard\AuthController;
 use App\Http\Controllers\Dashboard\HomeController;
 use App\Http\Controllers\Dashboard\OrderController;
@@ -53,6 +54,9 @@ Route::prefix('dashboard')->group(function () {
         Route::post('/showProduct/{product_id}', [VisibilityController::class, 'showProduct']);
         Route::post('/hideCategory/{family_id}', [VisibilityController::class, 'hideCategory']);
         Route::post('/showCategory/{family_id}', [VisibilityController::class, 'showCategory']);
+        Route::get('/latestOffers', [LatestOffersController::class, 'latestOffers']);
+        Route::post('/addLatestOffer', [LatestOffersController::class, 'addLatestOffer']);
+        Route::post('/removeLatestOffer/{product_id}', [LatestOffersController::class, 'removeLatestOffer']);
         Route::get('/stock', [StockController::class, 'stock']);
         Route::post('/toggleStock/{product_id}/{warehouse_id}', [StockController::class, 'toggleStock']);
         });

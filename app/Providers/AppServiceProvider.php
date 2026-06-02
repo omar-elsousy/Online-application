@@ -87,6 +87,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Services\Dashboard\Stock\StockService::class,
             \App\Services\Dashboard\Stock\Impl\StockServiceImpl::class
         );
+        $this->app->bind(
+            \App\Services\Dashboard\LatestOffers\LatestOffersService::class,
+            \App\Services\Dashboard\LatestOffers\Impl\LatestOffersServiceImpl::class
+        );
     }
 
     public function boot()
