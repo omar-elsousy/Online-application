@@ -125,4 +125,82 @@ class ProductServiceImpl implements ProductService
             ],
         ], 200);
     }
+
+    public function getLatestOffers()
+    {
+        $user = DB::connection('oracle_sales')
+            ->table('online_app_users')
+            ->where('id', auth()->id())
+            ->first();
+
+        $warehouseId = $user ? $user->warehouse_id : null;
+
+        // 2. جيب كل العروض المتاحة
+        $offers = DB::connection('oracle_sales')
+            ->table('online_app_offers_products')
+            ->orderBy('product_id')
+            ->get();
+
+        if ($offers->isEmpty()) {
+            return collect(); 
+        }
+
+        // 3. اجمع كل الـ product_ids في مصفوفة عشان تستعلم عنهم مرة واحدة
+        $productIds = $offers->pluck('product_id')->unique()->toArray();
+
+        // 4. جيب كل المنتجات دفعة واحدة (من الداتابيز التانية) وحولها لـ Key-Value Map للوصول السريع
+        $products = DB::connection('oracle_lmidc')
+            ->table('to_sfa_products_android')
+            ->whereIn('product_id', $productIds)
+            ->get()
+            ->keyBy('product_id');
+
+        // 5. جيب كل الصور الخاصة بالمنتجات دي دفعة واحدة
+        $images = DB::connection('oracle_sales')
+            ->table('online_app_images')
+            ->where('type', 'product')
+            ->whereIn('ref_id', $productIds)
+            ->pluck('image_path', 'ref_id'); // هيرجع مصفوفة [product_id => image_path]
+
+        // 6. جيب المخزون لكل المنتجات دي في مخزن المستخدم الحالي دفعة واحدة
+        $stocks = collect();
+        if ($warehouseId) {
+            $stocks = DB::connection('oracle_sales')
+                ->table('online_app_stock')
+                ->whereIn('product_id', $productIds)
+                ->where('warehouse_id', $warehouseId)
+                ->get()
+                ->keyBy('product_id');
+        }
+
+        // 7. ادمج البيانات كلها بـ Loop سريعة في الميموري من غير كويريز زيادة
+        return $offers->map(function ($offer) use ($products, $images, $stocks) {
+            // ابحث عن المنتج في الميموري بدل الداتابيز
+            $product = $products->get($offer->product_id);
+
+            if (!$product) {
+                return null;
+            }
+
+            // جيب الصورة والمخزون من الميموري
+            $imagePath = $images->get($offer->product_id);
+            $stock = $stocks->get($offer->product_id);
+
+            $price = DB::connection('oracle_lmidc')
+            ->table('product_price_list')
+            ->where('product_id', $product->product_id)
+            ->where('line_price_id', 1)
+            ->first();
+
+            $tax = round(($price->pricelist_carton * ($price->tax_percentage / 100)) + $price->product_tax, 1);
+
+            return [
+                'image'      => $imagePath ? asset('storage/' . $imagePath) : null,
+                'product_id' => $product->product_id,
+                'name'       => $product->product_ename,
+                'price'      => round($price->pricelist_carton + $tax, 1),
+                'status'     => $stock ? ($stock->in_stock ? 'in stock' : 'out of stock') : 'in stock',
+            ];
+        })->filter()->values(); 
+    }
 }

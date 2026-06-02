@@ -98,4 +98,37 @@ class ProductController extends Controller
     {
         return $this->productService->getProductDetails($product_id);
     }
+
+        /**
+        * @OA\Get(
+        *     path="/getLatestOffers",
+        *     summary="جلب أحدث العروض",
+        *     tags={"Products"},
+        *     security={{"bearerAuth":{}}},
+        *     @OA\Response(
+        *         response=200,
+        *         description="قائمة العروض",
+        *         @OA\JsonContent(
+        *             @OA\Property(
+        *                 property="data",
+        *                 type="array",
+        *                 @OA\Items(
+        *                     type="object",
+        *                     @OA\Property(property="image", type="string", nullable=true, example="http://example.com/storage/products/offer.jpg"),
+        *                     @OA\Property(property="product_id", type="integer", example=101),
+        *                     @OA\Property(property="name", type="string", example="منتج A"),
+        *                     @OA\Property(property="original_price", type="number", example=50.0),
+        *                     @OA\Property(property="offer_price", type="number", example=40.0),
+        *                     @OA\Property(property="status", type="string", enum={"in stock","out of stock"}, example="in stock")
+        *                 )
+        *             )
+        *         )
+        *     ),
+        *     @OA\Response(response=401, description="Unauthenticated")
+        * )
+        */
+    public function getLatestOffers()
+    {
+        return $this->productService->getLatestOffers();
+    }   
 }

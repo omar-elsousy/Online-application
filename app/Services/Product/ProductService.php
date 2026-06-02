@@ -8,4 +8,5 @@ interface ProductService
 {
     public function getProductsByFamily($family_id);
     public function getProductDetails($product_id);
+    public function getLatestOffers();
 }
