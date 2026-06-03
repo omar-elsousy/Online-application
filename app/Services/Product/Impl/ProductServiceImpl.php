@@ -142,7 +142,7 @@ class ProductServiceImpl implements ProductService
             ->get();
 
         if ($offers->isEmpty()) {
-            return collect(); 
+            return collect();
         }
 
         // 3. اجمع كل الـ product_ids في مصفوفة عشان تستعلم عنهم مرة واحدة
@@ -187,10 +187,14 @@ class ProductServiceImpl implements ProductService
             $stock = $stocks->get($offer->product_id);
 
             $price = DB::connection('oracle_lmidc')
-            ->table('product_price_list')
-            ->where('product_id', $product->product_id)
-            ->where('line_price_id', 1)
-            ->first();
+                ->table('product_price_list')
+                ->where('product_id', $product->product_id)
+                ->where('line_price_id', 1)
+                ->first();
+
+            if (!$price) {
+                return null;
+            }
 
             $tax = round(($price->pricelist_carton * ($price->tax_percentage / 100)) + $price->product_tax, 1);
 
@@ -201,6 +205,6 @@ class ProductServiceImpl implements ProductService
                 'price'      => round($price->pricelist_carton + $tax, 1),
                 'status'     => $stock ? ($stock->in_stock ? 'in stock' : 'out of stock') : 'in stock',
             ];
-        })->filter()->values(); 
+        })->filter()->values();
     }
 }
