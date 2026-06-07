@@ -12,50 +12,75 @@ class ImageServiceImpl implements ImageService
     public function images(Request $request)
     {
         $products = DB::connection('oracle_lmidc')
-                        ->table('to_sfa_products_android')
-                        ->get();
+            ->table('to_sfa_products_android')
+            ->get();
 
         $categories = DB::connection('oracle_lmidc')
-                        ->table('prod_family')
-                        ->get();
+            ->table('prod_family')
+            ->get();
 
         $productImages = DB::connection('oracle_sales')
-                    ->table('online_app_images')
-                    ->where('type', 'product')
-                    ->orderBy('created_at', 'desc')
-                    ->get()
-                    ->map(function($image) {
-                        $product = DB::connection('oracle_lmidc')
-                                        ->table('to_sfa_products_android')
-                                        ->where('product_id', $image->ref_id)
-                                        ->first();
-                        $image->name = $product ? $product->product_ename : '-';
-                        return $image;
-                    });
+            ->table('online_app_images')
+            ->where('type', 'product')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($image) {
+                $product = DB::connection('oracle_lmidc')
+                    ->table('to_sfa_products_android')
+                    ->where('product_id', $image->ref_id)
+                    ->first();
+                $image->name = $product ? $product->product_ename : '-';
+                return $image;
+            });
 
         $categoryImages = DB::connection('oracle_sales')
-                            ->table('online_app_images')
-                            ->where('type', 'category')
-                            ->orderBy('created_at', 'desc')
-                            ->get()
-                            ->map(function($image) {
-                                $category = DB::connection('oracle_lmidc')
-                                                ->table('prod_family')
-                                                ->where('family_id', $image->ref_id)
-                                                ->first();
-                                $image->name = $category ? $category->name : '-';
-                                return $image;
-                            });
+            ->table('online_app_images')
+            ->where('type', 'category')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($image) {
+                $category = DB::connection('oracle_lmidc')
+                    ->table('prod_family')
+                    ->where('family_id', $image->ref_id)
+                    ->first();
+                $image->name = $category ? $category->name : '-';
+                return $image;
+            });
 
         $sectionImages = DB::connection('oracle_sales')
-                            ->table('online_app_images')
-                            ->where('type', 'section')
-                            ->orderBy('created_at', 'desc')
-                            ->get();
+            ->table('online_app_images')
+            ->where('type', 'section')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $companies = DB::connection('oracle_lmidc')
+            ->table('product_company')
+            ->select('company_id', 'company_name')
+            ->orderBy('company_id')
+            ->get();
+
+        $companyImages = DB::connection('oracle_sales')
+            ->table('online_app_images')
+            ->where('type', 'company')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($image) {
+                $company = DB::connection('oracle_lmidc')
+                    ->table('product_company')
+                    ->where('company_id', $image->ref_id)
+                    ->first();
+                $image->name = $company ? $company->company_name : '-';
+                return $image;
+            });
 
         return view('dashboard.images', compact(
-            'products', 'categories',
-            'productImages', 'categoryImages', 'sectionImages'
+            'products',
+            'categories',
+            'productImages',
+            'categoryImages',
+            'sectionImages',
+            'companies',
+            'companyImages'
         ));
     }
 
@@ -70,10 +95,10 @@ class ImageServiceImpl implements ImageService
 
         // امسح الصورة القديمة لو موجودة
         $old = DB::connection('oracle_sales')
-                    ->table('online_app_images')
-                    ->where('type', 'product')
-                    ->where('ref_id', $request->product_id)
-                    ->first();
+            ->table('online_app_images')
+            ->where('type', 'product')
+            ->where('ref_id', $request->product_id)
+            ->first();
 
         if ($old) {
             Storage::disk('public')->delete($old->image_path);
@@ -106,10 +131,10 @@ class ImageServiceImpl implements ImageService
 
         // امسح الصورة القديمة لو موجودة
         $old = DB::connection('oracle_sales')
-                    ->table('online_app_images')
-                    ->where('type', 'category')
-                    ->where('ref_id', $request->family_id)
-                    ->first();
+            ->table('online_app_images')
+            ->where('type', 'category')
+            ->where('ref_id', $request->family_id)
+            ->first();
 
         if ($old) {
             Storage::disk('public')->delete($old->image_path);
@@ -154,9 +179,9 @@ class ImageServiceImpl implements ImageService
     public function deleteImage(Request $request, $image_id)
     {
         $image = DB::connection('oracle_sales')
-                    ->table('online_app_images')
-                    ->where('id', $image_id)
-                    ->first();
+            ->table('online_app_images')
+            ->where('id', $image_id)
+            ->first();
 
         if ($image) {
             Storage::disk('public')->delete($image->image_path);
@@ -165,6 +190,41 @@ class ImageServiceImpl implements ImageService
                 ->where('id', $image_id)
                 ->delete();
         }
+
+        return redirect(asset('dashboard/images'));
+    }
+
+    public function uploadCompanyImage(Request $request)
+    {
+        $request->validate([
+            'company_id' => 'required',
+            'image'      => 'required|image|mimes:jpeg,png,jpg',
+        ]);
+
+        $path = $request->file('image')->store('images/companies', 'public');
+
+        $old = DB::connection('oracle_sales')
+            ->table('online_app_images')
+            ->where('type', 'company')
+            ->where('ref_id', $request->company_id)
+            ->first();
+
+        if ($old) {
+            Storage::disk('public')->delete($old->image_path);
+            DB::connection('oracle_sales')
+                ->table('online_app_images')
+                ->where('id', $old->id)
+                ->delete();
+        }
+
+        DB::connection('oracle_sales')
+            ->table('online_app_images')
+            ->insert([
+                'type'       => 'company',
+                'ref_id'     => $request->company_id,
+                'image_path' => $path,
+                'created_at' => now(),
+            ]);
 
         return redirect(asset('dashboard/images'));
     }

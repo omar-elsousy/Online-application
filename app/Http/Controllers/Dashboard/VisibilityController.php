@@ -39,4 +39,14 @@ class VisibilityController extends Controller
     {
         return $this->visibilityService->showCategory($request, $family_id);
     }
+
+    public function hideCompany(Request $request, $company_id)
+    {
+        return $this->visibilityService->hideCompany($request, $company_id);
+    }
+
+    public function showCompany(Request $request, $company_id)
+    {
+        return $this->visibilityService->showCompany($request, $company_id);
+    }
 }

@@ -52,4 +52,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/changePassword', [AuthController::class, 'changePassword']);
     Route::post('/saveDeviceToken', [NotificationController::class, 'saveDeviceToken']);
     Route::get('/getLatestOffers', [ProductController::class, 'getLatestOffers']);
+    Route::get('/companies', [CategoryController::class, 'getCompanies']);
+    Route::get('/companies/{company_id}/categories', [CategoryController::class, 'getCategoriesByCompany']);
 });

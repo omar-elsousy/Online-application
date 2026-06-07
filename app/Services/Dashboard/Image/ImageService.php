@@ -10,5 +10,6 @@ interface ImageService
     public function uploadProductImage(Request $request);
     public function uploadCategoryImage(Request $request);
     public function uploadSectionImage(Request $request);
+    public function uploadCompanyImage(Request $request);
     public function deleteImage(Request $request, $image_id);
 }

@@ -35,6 +35,11 @@ class ImageController extends Controller
         return $this->imageService->uploadSectionImage($request);
     }
 
+    public function uploadCompanyImage(Request $request)
+    {
+        return $this->imageService->uploadCompanyImage($request);
+    }
+
     public function deleteImage(Request $request, $image_id)
     {
         return $this->imageService->deleteImage($request, $image_id);

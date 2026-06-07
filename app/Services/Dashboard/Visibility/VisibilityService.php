@@ -11,4 +11,6 @@ interface VisibilityService
     public function showProduct(Request $request, $product_id);
     public function hideCategory(Request $request, $family_id);
     public function showCategory(Request $request, $family_id);
+    public function hideCompany(Request $request, $company_id);
+    public function showCompany(Request $request, $company_id);
 }

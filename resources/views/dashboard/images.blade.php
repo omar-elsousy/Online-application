@@ -12,6 +12,9 @@
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="tab" href="#sections">صور الإعلانات</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#companies">صور الشركات</a>
+    </li>
 </ul>
 
 <div class="tab-content">
@@ -27,7 +30,7 @@
                         <label>المنتج</label>
                         <select name="product_id" class="form-select">
                             @foreach($products as $product)
-                                <option value="{{ $product->product_id }}">{{ $product->product_ename }}</option>
+                            <option value="{{ $product->product_id }}">{{ $product->product_ename }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -71,7 +74,7 @@
                         <label>الكاتيجوري</label>
                         <select name="family_id" class="form-select">
                             @foreach($categories as $category)
-                                <option value="{{ $category->family_id }}">{{ $category->name }}</option>
+                            <option value="{{ $category->family_id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -91,7 +94,7 @@
                     <div class="card-body p-2 text-center">
                         <small>{{ $image->name }}</small>
                         <br>
-                        <small>code : {{ $image->ref_id }}</small>   
+                        <small>code : {{ $image->ref_id }}</small>
                         <form method="POST" action="{{ asset('dashboard/deleteImage') }}/{{ $image->id }}">
                             @csrf
                             <button type="submit" class="btn btn-sm btn-danger w-100 mt-1"
@@ -126,6 +129,48 @@
                     <img src="{{ asset('storage/' . $image->image_path) }}" class="card-img-top" style="height:120px;object-fit:cover;">
                     <div class="card-body p-2 text-center">
                         <form method="POST" action="{{ asset('dashboard/deleteImage') }}/{{ $image->id }}">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-danger w-100 mt-1"
+                                onclick="return confirm('هتحذف الصورة دي؟')">حذف</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+
+    {{-- صور الشركات --}}
+    <div class="tab-pane fade" id="companies">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <h6 class="mb-3">رفع صورة شركة</h6>
+                <form method="POST" action="{{ asset('dashboard/uploadCompanyImage') }}" enctype="multipart/form-data" class="d-flex gap-2 align-items-end">
+                    @csrf
+                    <div>
+                        <label>الشركة</label>
+                        <select name="company_id" class="form-select">
+                            @foreach($companies as $company)
+                            <option value="{{ $company->company_id }}">{{ $company->company_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label>الصورة</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary">رفع</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            @foreach($companyImages as $image)
+            <div class="col-md-2 mb-3">
+                <div class="card border-0 shadow-sm">
+                    <img src="{{ asset('storage/' . $image->image_path) }}" class="card-img-top" style="height:120px;object-fit:cover;">
+                    <div class="card-body p-2 text-center">
+                        <small>{{ $image->ref_id }} - {{ $image->name }}</small>
+                        <form method="POST" action="{{ asset('dashboard/deleteImage/' . $image->id) }}">
                             @csrf
                             <button type="submit" class="btn btn-sm btn-danger w-100 mt-1"
                                 onclick="return confirm('هتحذف الصورة دي؟')">حذف</button>

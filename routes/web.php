@@ -42,6 +42,7 @@ Route::prefix('dashboard')->group(function () {
         Route::post('/uploadProductImage', [ImageController::class, 'uploadProductImage']);
         Route::post('/uploadCategoryImage', [ImageController::class, 'uploadCategoryImage']);
         Route::post('/uploadSectionImage', [ImageController::class, 'uploadSectionImage']);
+        Route::post('/uploadCompanyImage', [ImageController::class, 'uploadCompanyImage']);
         Route::post('/deleteImage/{image_id}', [ImageController::class, 'deleteImage']);
         Route::get('/sections', [SectionController::class, 'sections']);
         Route::post('/toggleSection/{image_id}', [SectionController::class, 'toggleSection']);
@@ -54,16 +55,18 @@ Route::prefix('dashboard')->group(function () {
         Route::post('/showProduct/{product_id}', [VisibilityController::class, 'showProduct']);
         Route::post('/hideCategory/{family_id}', [VisibilityController::class, 'hideCategory']);
         Route::post('/showCategory/{family_id}', [VisibilityController::class, 'showCategory']);
+        Route::post('/hideCompany/{company_id}', [VisibilityController::class, 'hideCompany']);
+        Route::post('/showCompany/{company_id}', [VisibilityController::class, 'showCompany']);
         Route::get('/latestOffers', [LatestOffersController::class, 'latestOffers']);
         Route::post('/addLatestOffer', [LatestOffersController::class, 'addLatestOffer']);
         Route::post('/removeLatestOffer/{product_id}', [LatestOffersController::class, 'removeLatestOffer']);
         Route::get('/stock', [StockController::class, 'stock']);
         Route::post('/toggleStock/{product_id}/{warehouse_id}', [StockController::class, 'toggleStock']);
-        });
+    });
 
     Route::middleware('super.admin')->group(function () {
-    Route::get('/admins', [AdminController::class, 'admins']);
-    Route::post('/addAdmin', [AdminController::class, 'addAdmin']);
-    Route::post('/deleteAdmin/{admin_id}', [AdminController::class, 'deleteAdmin']);
-});  
+        Route::get('/admins', [AdminController::class, 'admins']);
+        Route::post('/addAdmin', [AdminController::class, 'addAdmin']);
+        Route::post('/deleteAdmin/{admin_id}', [AdminController::class, 'deleteAdmin']);
+    });
 });
