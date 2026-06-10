@@ -29,4 +29,9 @@ class SectionController extends Controller
     {
         return $this->sectionService->updateSortOrder($request, $image_id);
     }
+
+    public function updateAction(Request $request, $image_id)
+    {
+        return $this->sectionService->updateAction($request, $image_id);
+    }
 }

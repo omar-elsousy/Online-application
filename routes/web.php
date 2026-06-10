@@ -47,6 +47,7 @@ Route::prefix('dashboard')->group(function () {
         Route::get('/sections', [SectionController::class, 'sections']);
         Route::post('/toggleSection/{image_id}', [SectionController::class, 'toggleSection']);
         Route::post('/updateSortOrder/{image_id}', [SectionController::class, 'updateSortOrder']);
+        Route::post('/updateAction/{image_id}', [SectionController::class, 'updateAction']);
         Route::get('/notifications', [NotificationController::class, 'notifications']);
         Route::post('/sendToAll', [NotificationController::class, 'sendToAll']);
         Route::post('/sendToUser', [NotificationController::class, 'sendToUser']);
